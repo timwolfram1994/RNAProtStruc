@@ -5,7 +5,7 @@ from IPython.display import display
 import matplotlib.pyplot as plt
 
 filename = "2eso.pdb"
-path = os.path.join(os.getcwd(), filename)
+path = os.path.join(os.getcwd(),"pdb_samples", filename)
 
 
 #####chatGPT####
@@ -64,14 +64,16 @@ nx.draw_networkx_labels(G, pos)
 plt.axis('off')
 plt.show()
 '''
-print(G.edges)
 
-counter = 0
-for i in G.edges:
-    if i[2] == 2:
-        counter += 1
+if __name__ == '__main__':
+    print(G.edges)
 
-print(counter)
+    counter = 0
+    for i in G.edges:
+        if i[2] == 2:
+            counter += 1
+
+    print(counter)
 
 
 
