@@ -1,14 +1,14 @@
 import networkx as nx
 import os
 from biopandas.pdb import PandasPdb
-from IPython.display import display
-import matplotlib.pyplot as plt
+#from IPython.display import display
+#import matplotlib.pyplot as plt
 
 filename = "2eso.pdb"
 path = os.path.join(os.getcwd(),"pdb_samples", filename)
 
 
-#####chatGPT####
+
 
 def pdb_to_graph(path):
     # Load the PDB file using Biopandas
@@ -23,7 +23,7 @@ def pdb_to_graph(path):
         atom_element = row['element_symbol']
 
         # Add nodes to the graph for each atom
-        G.add_node(atom_serial, element=atom_element)
+        G.add_node(atom_serial, element=atom_element, pos=(row['x_coord'], row['y_coord'], row['z_coord']))
 
         # Add edges to the graph between adjacent atoms in the residue
         residue_id = row['residue_number']
@@ -51,7 +51,6 @@ def pdb_to_graph(path):
 
 
 
-G = pdb_to_graph(path)
 
 
 # Draw the graph
@@ -66,6 +65,9 @@ plt.show()
 '''
 
 if __name__ == '__main__':
+
+    G = pdb_to_graph(path)
+
     print(G.edges)
 
     counter = 0
@@ -74,6 +76,8 @@ if __name__ == '__main__':
             counter += 1
 
     print(counter)
+
+
 
 
 
