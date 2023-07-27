@@ -1,5 +1,6 @@
 import networkx as nx
 
+
 def create5Ggraph(multigraph1G):
     # create an edge list for the 5G Graph
     listofedges = []
@@ -20,10 +21,13 @@ def create5Ggraph(multigraph1G):
 
     return multigraph5G
 
+
 def create_initialsupportGraph(multigraph5G):
-    h = nx.MultiGraph()
-    h.add_nodes_from(multigraph5G)
+    k = 5
+    l = 6
+    h = nx.MultiDiGraph()
+    h.add_nodes_from(multigraph5G, pebbles=k)
     return h
 
-def pebblegame(fiveGgraph):
-    pass
+    def pebblegame(supportGraph):
+        while

@@ -1,5 +1,4 @@
 from matplotlib import pyplot as plt
-from create5Ggraph import *
 from pdb_to_graph import *
 from pebblegame import *
 import scipy as sp
@@ -17,6 +16,9 @@ test5g = create5Ggraph(test)
 # plt.show()
 supportgraph = create_initialsupportGraph(test5g)
 print(supportgraph.nodes)
+print(supportgraph.nodes[0]["pebbles"])
+supportgraph.nodes[0]["pebbles"] = supportgraph.nodes[0]["pebbles"] -1
+print(supportgraph.nodes[0]["pebbles"])
 # toprint = test5g.edges
 # for edge in toprint:
 #     print(edge)
