@@ -22,12 +22,26 @@ def create5Ggraph(multigraph1G):
     return multigraph5G
 
 
-def create_initialsupportGraph(multigraph5G):
+def initiate_supportGraph(multigraph5G):
     k = 5
     l = 6
     h = nx.MultiDiGraph()
     h.add_nodes_from(multigraph5G, pebbles=k)
     return h
 
-    def pebblegame(supportGraph):
-        while
+
+def pebblegame(supportGraph, multigraph1G):
+    k = 5
+    l = 6
+    original_edges = []
+    for originalEdge in multigraph1G.edges:
+        original_edges.append(originalEdge)
+
+
+    components = [] #list of lists
+    activecomponent = 0
+    # for i in range(0, 6):
+    for originalEdge in multigraph1G.edges:
+        if (originalEdge[0],originalEdge[1]) not in components:
+            if supportGraph.nodes[originalEdge[0]]["pebbles"] + supportGraph.nodes[originalEdge[1]]["pebbles"] >= l + 1:
+                supportGraph.add_edge(originalEdge[0], originalEdge[1])

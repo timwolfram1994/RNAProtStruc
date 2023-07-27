@@ -14,7 +14,7 @@ test = multigraph1G #pdb_to_graph(path)
 test5g = create5Ggraph(test)
 # nx.draw(test, with_labels=True)
 # plt.show()
-supportgraph = create_initialsupportGraph(test5g)
+supportgraph = initiate_supportGraph(test5g)
 print(supportgraph.nodes)
 print(supportgraph.nodes[0]["pebbles"])
 supportgraph.nodes[0]["pebbles"] = supportgraph.nodes[0]["pebbles"] -1
