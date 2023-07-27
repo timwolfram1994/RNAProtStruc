@@ -9,7 +9,6 @@ path = os.path.join(os.getcwd(),"pdb_samples", filename)
 
 
 
-
 def pdb_to_graph(path):
     # Load the PDB file using Biopandas
     df = PandasPdb().read_pdb(path)

@@ -30,18 +30,33 @@ def initiate_supportGraph(multigraph5G):
     return h
 
 
-def pebblegame(supportGraph, multigraph1G):
+def pebblegame(supportGraph, multigraph5G):
     k = 5
     l = 6
     original_edges = []
-    for originalEdge in multigraph1G.edges:
+    for originalEdge in multigraph5G.edges:
         original_edges.append(originalEdge)
 
+    # randomizer for iterating over arbitrary edges
 
-    components = [] #list of lists
+    components = []  # list of lists
     activecomponent = 0
-    # for i in range(0, 6):
-    for originalEdge in multigraph1G.edges:
-        if (originalEdge[0],originalEdge[1]) not in components:
-            if supportGraph.nodes[originalEdge[0]]["pebbles"] + supportGraph.nodes[originalEdge[1]]["pebbles"] >= l + 1:
-                supportGraph.add_edge(originalEdge[0], originalEdge[1])
+    for i in range(0, 6):
+        for originalEdge in multigraph5G.edges:
+            # component detection noch falsch! s. Paper!
+            if (originalEdge[0], originalEdge[1]) not in components:
+
+                if supportGraph.nodes[originalEdge[0]]["pebbles"] + supportGraph.nodes[originalEdge[1]]["pebbles"] >= l + 1:
+                    # add edge
+                    supportGraph.add_edge(originalEdge[0], originalEdge[1])
+                    # reduce pebbles
+                    supportGraph.nodes[originalEdge[0]]["pebbles"] = supportGraph.nodes[originalEdge[0]]["pebbles"] - 1
+                    supportGraph.nodes[originalEdge[1]]["pebbles"] = supportGraph.nodes[originalEdge[1]]["pebbles"] - 1
+
+
+                else:
+                    #DFS
+
+                # create new component
+
+                # add component
