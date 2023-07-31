@@ -1,3 +1,5 @@
+import random
+
 import networkx as nx
 
 
@@ -33,13 +35,23 @@ def initiate_supportGraph(multigraph5G):
 def pebblegame(supportGraph, multigraph5G):
     k = 5
     l = 6
+
+    # randomizer for iterating over arbitrary edges
+    # without replacement
     original_edges = []
     for originalEdge in multigraph5G.edges:
         original_edges.append(originalEdge)
+    initialLen = len(original_edges)
+    for i in range(0,initialLen):
+        randLen = len(original_edges)
+        next_int = random.randint(0,randLen)
+        nextEdge = original_edges[next_int]
+        original_edges.pop(next_int)
 
     # randomizer for iterating over arbitrary edges
 
     components = []  # list of lists
+
     activecomponent = 0
     for i in range(0, 6):
         for originalEdge in multigraph5G.edges:
