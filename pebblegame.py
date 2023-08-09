@@ -31,7 +31,6 @@ def initiate_supportGraph(multigraph5G):
     h.add_nodes_from(multigraph5G, pebbles=k)
     return h
 
-
 def pebblegame(supportGraph, multigraph5G):
     k = 5
     l = 6
@@ -45,18 +44,39 @@ def pebblegame(supportGraph, multigraph5G):
     for i in range(0,initialLen):
         randLen = len(original_edges)
         next_int = random.randint(0,randLen)
-        nextEdge = original_edges[next_int]
-        original_edges.pop(next_int)
+        currentEdge = original_edges[next_int]
 
-    # randomizer for iterating over arbitrary edges
+        # Component Detection V2:
+        if supportGraph.nodes[currentEdge[0]]["pebbles"] + supportGraph.nodes[currentEdge[1]]["pebbles"] >= l+1:
+            supportGraph.add_edge(currentEdge[0], currentEdge[1])
+            supportGraph.nodes[currentEdge[0]]["pebbles"] = supportGraph.nodes[currentEdge[0]]["pebbles"] - 1
 
-    components = []  # list of lists
+        else:
+            #compute reach:
+            visited = []
+            to_visit = []
+            u_node = currentEdge[0]
+            v_node = currentEdge[1]
+            visited.append(u_node)
+            to_visit.append(supportGraph.successors(u_node))
+            if not v_node in to_visit:
 
-    activecomponent = 0
-    for i in range(0, 6):
-        for originalEdge in multigraph5G.edges:
-            # component detection noch falsch! s. Paper!
-            if (originalEdge[0], originalEdge[1]) not in components:
+
+            currentnode
+
+            unitedReach = [nx.dfs_preorder_nodes()]
+
+        original_edges.pop(currentEdge)
+
+
+
+                # return {} -> edge is free
+            # 2. else:
+            #       compute reach(u) u reach (v) = reach (u,v)
+            #       if any element of reach (u,v) has at least on free pebble, return -> {}
+            #       else:
+            #
+            
 
                 if supportGraph.nodes[originalEdge[0]]["pebbles"] + supportGraph.nodes[originalEdge[1]]["pebbles"] >= l + 1:
                     # add edge
