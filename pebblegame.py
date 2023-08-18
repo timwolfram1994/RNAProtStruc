@@ -31,64 +31,79 @@ def initiate_supportGraph(multigraph5G):
     h.add_nodes_from(multigraph5G, pebbles=k)
     return h
 
-def pebblegame(supportGraph, multigraph5G):
+
+def pebblegame(supportGraph: nx.MultiDiGraph, multigraph5G):
     k = 5
     l = 6
 
     # randomizer for iterating over arbitrary edges
     # without replacement
+
     original_edges = []
     for originalEdge in multigraph5G.edges:
         original_edges.append(originalEdge)
     initialLen = len(original_edges)
-    for i in range(0,initialLen):
+    for i in range(0, initialLen):
         randLen = len(original_edges)
-        next_int = random.randint(0,randLen)
+        next_int = random.randint(0, randLen)
         currentEdge = original_edges[next_int]
 
-        # Component Detection V2:
-        if supportGraph.nodes[currentEdge[0]]["pebbles"] + supportGraph.nodes[currentEdge[1]]["pebbles"] >= l+1:
+        # Prüfung ob u = v:
+        if currentEdge[0] == currentEdge[1]:
+            continue
+        # einfügen der neuen Kante (u,v)
+        if supportGraph.nodes[currentEdge[0]]["pebbles"] + supportGraph.nodes[currentEdge[1]]["pebbles"] >= l + 1:
             supportGraph.add_edge(currentEdge[0], currentEdge[1])
             supportGraph.nodes[currentEdge[0]]["pebbles"] = supportGraph.nodes[currentEdge[0]]["pebbles"] - 1
 
+    # Component Detection V2:
+        # 1.) check, whether there are still more than l pebbles on (u,v)
+        if supportGraph.nodes[currentEdge[0]]["pebbles"] + supportGraph.nodes[currentEdge[1]]["pebbles"] >= l + 1:
+             continue
+
+        # 2.) compute reach:
         else:
-            #compute reach:
+            # Definition eines u und v Knotens sowie zweier Listen für abgearbeitete Knoten und erkannte, noch nicht besuchte Knoten innerhalb des Reaches
             visited = []
             to_visit = []
             u_node = currentEdge[0]
             v_node = currentEdge[1]
+
+            # initiale Befüllung der Listen mit direkten Nachfolgern von u und v
             visited.append(u_node)
-            to_visit.append(supportGraph.successors(u_node))
-            if not v_node in to_visit:
+            successors_of_u = supportGraph.successors(u_node)
+            for successor in successors_of_u:
+                to_visit.append(successor)
+            if v_node not in to_visit:
+                successors_of_v = supportGraph.successors(v_node)
+                for successor in successors_of_v:
+                    to_visit.append(successor)
 
+            # iteratives Befüllen der Listen mit indirekten Nachfolgern, so lange es noch zu besuchende Knoten gibt:
+            count_of_to_visit_nodes = len(to_visit)
+            while count_of_to_visit_nodes != 0:
+                current_node = to_visit[-1]
+                if current_node not in visited:
+                    visited.append(to_visit[-1])
+                    if len(supportGraph.successors(current_node)) == 0:
+                        to_visit.pop(-1)
+                        count_of_to_visit_nodes = len(to_visit)
+                    else:
+                        successors = supportGraph.successors(current_node)
+                        for successor in successors:
+                            to_visit.append(successor)
 
-            currentnode
+        # 2.a) check for any free pebble within all elements of reach(u,v)
+            for node in visited:
+                if node["pebbles"] != 0:
+                    break
+        # 2.b) in arbeit
+                else:
 
-            unitedReach = [nx.dfs_preorder_nodes()]
+                    pass
+
 
         original_edges.pop(currentEdge)
 
 
 
-                # return {} -> edge is free
-            # 2. else:
-            #       compute reach(u) u reach (v) = reach (u,v)
-            #       if any element of reach (u,v) has at least on free pebble, return -> {}
-            #       else:
-            #
-            
-
-                if supportGraph.nodes[originalEdge[0]]["pebbles"] + supportGraph.nodes[originalEdge[1]]["pebbles"] >= l + 1:
-                    # add edge
-                    supportGraph.add_edge(originalEdge[0], originalEdge[1])
-                    # reduce pebbles
-                    supportGraph.nodes[originalEdge[0]]["pebbles"] = supportGraph.nodes[originalEdge[0]]["pebbles"] - 1
-                    supportGraph.nodes[originalEdge[1]]["pebbles"] = supportGraph.nodes[originalEdge[1]]["pebbles"] - 1
-
-
-                else:
-                    #DFS
-
-                # create new component
-
-                # add component
