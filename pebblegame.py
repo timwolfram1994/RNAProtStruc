@@ -1,6 +1,7 @@
 import random
 
 import networkx as nx
+import numpy as np
 
 
 def create5Ggraph(multigraph1G):
@@ -36,13 +37,17 @@ def pebblegame(supportGraph: nx.MultiDiGraph, multigraph5G):
     k = 5
     l = 6
 
+
+    # initiiere n x n matrix aller knoten zur Darstellung bereits vorhandener Komponenten
+    components = np.zeros((len(multigraph5G.nodes),len(multigraph5G.nodes)))
+
     # randomizer for iterating over arbitrary edges
     # without replacement
-
     original_edges = []
     for originalEdge in multigraph5G.edges:
         original_edges.append(originalEdge)
     initialLen = len(original_edges)
+
     for i in range(0, initialLen):
         randLen = len(original_edges)
         next_int = random.randint(0, randLen)
@@ -51,15 +56,20 @@ def pebblegame(supportGraph: nx.MultiDiGraph, multigraph5G):
         # Prüfung ob u = v:
         if currentEdge[0] == currentEdge[1]:
             continue
+
+        # prüfung ob (u,v) in irgendeiner Komponente (matrix zelle true):
+        if components[list(supportGraph.nodes).index(currentEdge[0])][list(supportGraph.nodes).index(currentEdge[1])] == 1:
+            continue
+
         # einfügen der neuen Kante (u,v)
         if supportGraph.nodes[currentEdge[0]]["pebbles"] + supportGraph.nodes[currentEdge[1]]["pebbles"] >= l + 1:
             supportGraph.add_edge(currentEdge[0], currentEdge[1])
             supportGraph.nodes[currentEdge[0]]["pebbles"] = supportGraph.nodes[currentEdge[0]]["pebbles"] - 1
 
-    # Component Detection V2:
+        # Component Detection V2:
         # 1.) check, whether there are still more than l pebbles on (u,v)
         if supportGraph.nodes[currentEdge[0]]["pebbles"] + supportGraph.nodes[currentEdge[1]]["pebbles"] >= l + 1:
-             continue
+            continue
 
         # 2.) compute reach:
         else:
@@ -80,30 +90,67 @@ def pebblegame(supportGraph: nx.MultiDiGraph, multigraph5G):
                     to_visit.append(successor)
 
             # iteratives Befüllen der Listen mit indirekten Nachfolgern, so lange es noch zu besuchende Knoten gibt:
-            count_of_to_visit_nodes = len(to_visit)
-            while count_of_to_visit_nodes != 0:
+
+            while len(to_visit) != 0:
                 current_node = to_visit[-1]
                 if current_node not in visited:
                     visited.append(to_visit[-1])
                     if len(supportGraph.successors(current_node)) == 0:
                         to_visit.pop(-1)
-                        count_of_to_visit_nodes = len(to_visit)
+
                     else:
                         successors = supportGraph.successors(current_node)
                         for successor in successors:
                             to_visit.append(successor)
 
-        # 2.a) check for any free pebble within all elements of reach(u,v)
+            # 2.a) check for any free pebble within all elements of reach(u,v)
             for node in visited:
                 if node["pebbles"] != 0:
                     break
-        # 2.b) in arbeit
-                else:
+                #       prüfen!!! ob der mit neuer Kante weitermacht
 
-                    pass
+                # 2.b) DFS from nodes not in reach(u,v) in Supportgraph mit allen Kanten umgedreht:
+                else:
+                    # Reversed Graph erstellen
+                    supportgraph_reversed = supportGraph.reverse(copy=True)
+
+                    # Alle Knoten auflisten, welche nicht im Reach(u,v) liegen
+                    not_in_reach = [node for node in supportGraph.nodes if node not in visited]
+                    # DFS für alle Knoten außerhalb des Reaches(u,v)
+                    identified_component = []
+                    visited = set()
+                    for node in not_in_reach:
+                        # initiale Befüllung von to_visit und visited
+                        to_visit = []
+                        visited.add(node)
+                        successors = supportgraph_reversed.successors(node)
+                        for successor in successors:
+                            to_visit.append(successor)
+                        # DFS(node)
+                        while len(to_visit) != 0:
+                            current_node = to_visit[-1]
+                            if current_node not in visited:
+                                visited.add(to_visit[-1])
+                                if len(supportGraph.successors(current_node)) == 0:
+                                    to_visit.pop(-1)
+
+                                else:
+                                    successors = supportGraph.successors(current_node)
+                                    for successor in successors:
+                                        to_visit.append(successor)
+
+                    identified_component.append(node for node in supportGraph.nodes if node not in visited)
+                    # Update der n x n matrix
+                    for i in range(0,len(identified_component)-1):
+                        for j in range(i+1,len(identified_component)):
+                            index_i = list(supportGraph.nodes).index(identified_component[i])
+                            index_j = list(supportGraph.nodes).index(identified_component[j])
+
+                            components[index_j][index_i] = 1
+                            components[index_i][index_j] = 1
+
+
+
 
 
         original_edges.pop(currentEdge)
-
-
-
