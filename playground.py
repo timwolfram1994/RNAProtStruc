@@ -12,8 +12,15 @@ if __name__ == "__main__":
 
         print("after: ")
         counter = 0
-        while ("A","C") in multigraph1G.edges:
-                multigraph1G.remove_edge("A","C")
-                counter +=1
-        print(multigraph1G.edges)
-        print("edges deleted :", counter)
+
+        shortest_path = [("A","C"),("C","D")]
+        # for edge in shortest_path:
+        #         while edge in multigraph1G.edges:
+        #                 multigraph1G.remove_edge("A","C")
+        #                 multigraph1G.add_edge("C","A")
+        #                 counter +=1
+        #
+        #         print(multigraph1G.edges)
+        #         print("edges replace :", counter)
+
+
