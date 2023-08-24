@@ -76,9 +76,9 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                     u = V[V.index(e[1])]
                     v = V[V.index(e[0])]
                 visited = []
-                currentnode = u
+                current_node = u
                 to_visit = deque()
-                # Vorabrunde, damit to_visit nicht leer ist:
+                # Vorabrunde, damit ich später Knoten in to_visit habe, die ich für meine DFS abarbeiten kann
 
                 Continue_with_descendats = True
                 for successor in D.successors(u):
@@ -98,13 +98,15 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
 
                 #Tiefensuche innerhalb des Reaches, bis Pebble gefunden wurde
+                last_node = u
                 while to_visit:
-                    currentnode = to_visit.pop()
-                    to_visit.append(successor for successor in D.successors(u)
-                    while to_visit:
-                        for sucessor in D.successors(curretnode):
-                            if sucessor["pebbles"] != 0:
-                                pass
+                    current_node = to_visit.pop()
+                    # füge traversierte Kante visited hinzu
+                    traversed_edge = (last_node,current_node)
+                    visited.append(traversed_edge)
+
+
+
 
                 pebbles_after_dfs = "TBD"
                 if pebbles_uv == u["pebbles"] + v["pebbles"]:
