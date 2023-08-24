@@ -32,7 +32,6 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     D.add_nodes_from(G, pebbles=k)
     V = list(D.nodes)
 
-
     # initiiere n x n matrix aller knoten zur Darstellung bereits vorhandener Komponenten
     components = np.zeros((len(G.nodes), len(G.nodes)))
 
@@ -42,13 +41,13 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     for edge_of_G in G.edges:
         edges_to_insert.append(edge_of_G)
 
-    for i in range(0, len(g.edges)):
+    for i in range(0, len(G.edges)):
         # wähle eine zufällige Kante aus Edges_to_insert aus, über den Index der Liste einzufügender Kanten
-        current_edge_to_insert = edges_to_insert[random.randint(0, len(edges_to_insert))]
+        e = edges_to_insert[random.randint(0, len(edges_to_insert))]
 
         # definiere die Knoten u und v aus der einzusetzenden Kante
-        u = V[V.index(current_edge_to_insert[0])]
-        v = V[V.index(current_edge_to_insert[1])]
+        u = V[V.index(e[0])]
+        v = V[V.index(e[1])]
 
         # Prüfung ob u = v, falls ja, nächste Kante
         if u == v:
@@ -63,133 +62,112 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         pebbles_uv = u["pebbles"] + v["pebbles"]
 
         if pebbles_uv >= l + 1:
-            D.add_edge(current_edge_to_insert[0], current_edge_to_insert[1])
-            u["pebbles"] = u["pebbles"]-1
-            '''Prüfung, ob u-knoten 0 pebbles hat + problembehandlung ausstehend!'''
+            D.add_edge(e[0], e[1])
+            u["pebbles"] = u["pebbles"] - 1
 
+        # Tiefensuche für u (eingeschlossen v) .
         else:
-            while pebbles_uv < l+1:
-                # Tiefensuche: zuerst für u...
-                if u["pebbles"] < k:
-                    # ...sofern v bereits k pebbles hat
-                    if v["pebbles"] == k:
-                        current_node = u
 
-                        dfs_path_u = deque(u)
-                        to_visit_u = deque(current_node)
-                        while to_visit_u:
-                            current_node = to_visit_u.pop()
-                            successors = D.successors(current_node)
-                            if successors:
-                                for successor in successors:
-                                    if successor["pebbles"] ==0 and successor is not v:
-                                        to_visit_u.append(successor)
-                                    else:
-                                        successor["pebbles"] -=1
-                                        u["pebbles"] += 1
-                                        for edge in dfs_path_u:
+            while u["pebbles"] + v["pebbles"] < l + 1:
+
+                # Sofern u bereits 5 pebbles hat, werden u und v vertauscht.
+                # stellt sicher, dass nie mehr als 5 pebbles an u liegen werden
+                if u["pebbles"] == 5:
+                    u = V[V.index(e[1])]
+                    v = V[V.index(e[0])]
+                visited = []
+                currentnode = u
+                to_visit = deque()
+                # Vorabrunde, damit to_visit nicht leer ist:
+
+                Continue_with_descendats = True
+                for successor in D.successors(u):
+                    if successor["pebbles"] != 0:
+                        successor["pebbles"] -= 1
+                        u["pebbles"] += 1
+                        D.remove_edge(u, successor)
+                        D.add_edge(successor, u)
+                        Continue_with_descendats = False
+                        break
+                    else:
+                        to_visit.append(successor)
+                        continue
+
+                if not Continue_with_descendats:
+                    continue #... with while loop to find another pebble additionally to the one, just found - or to build the edge e
 
 
-                            last_node = current_node
-                            dfs_path_u.append((last_node,current_node))
-                            pass
+                #Tiefensuche innerhalb des Reaches, bis Pebble gefunden wurde
+                while to_visit:
+                    currentnode = to_visit.pop()
+                    to_visit.append(successor for successor in D.successors(u)
+                    while to_visit:
+                        for sucessor in D.successors(curretnode):
+                            if sucessor["pebbles"] != 0:
+                                pass
 
+                pebbles_after_dfs = "TBD"
+                if pebbles_uv == u["pebbles"] + v["pebbles"]:
+                    break
+                pebbles_uv = u["pebbles"] + v["pebbles"]
 
-        '''search for pebbles'''
-        # move pebbles around
+            # While-Schleife erfolgreich: Genug pebbles sind vorhanden, eine neue Kante wird eingefügt.
+            if pebbles_uv >= l + 1:
+                D.add_edge(e[0], e[1])
+                u["pebbles"] = u["pebbles"] - 1
+            # While-Schleife nicht erfolgreich: Abarbeiten der nächsten Kante
+            else:
+                continue
 
         # Component Detection V2:
         # 1.) check, whether there are still more than l pebbles on (u,v)
-        if D.nodes[current_edge_to_insert[0]]["pebbles"] + D.nodes[current_edge_to_insert[1]]["pebbles"] >= l + 1:
+        if D.nodes[e[0]]["pebbles"] + D.nodes[e[1]]["pebbles"] >= l + 1:
             continue
 
         # 2.) compute reach:
         else:
-            # Definition eines u und v Knotens sowie zweier Listen für abgearbeitete Knoten und erkannte, noch nicht besuchte Knoten innerhalb des Reaches
-            visited = []
-            '''set statt liste -> für effizienteren Durchgang ohne Dopplungen -> weniger iterationen'''
-            to_visit = []
-            u = current_edge_to_insert[0]
-            v = current_edge_to_insert[1]
-
-            # initiale Befüllung der Listen mit direkten Nachfolgern von u und v
-            visited.append(u)
-            successors_of_u = D.successors(u)
-            for successor in successors_of_u:
-                to_visit.append(successor)
-            if v not in to_visit:
-                successors_of_v = D.successors(v)
-                for successor in successors_of_v:
-                    to_visit.append(successor)
-
-            # iteratives Befüllen der Listen mit indirekten Nachfolgern, so lange es noch zu besuchende Knoten gibt:
-
-            while len(to_visit) != 0:
-                current_node = to_visit[-1]
-                if current_node not in visited:
-                    visited.append(to_visit[-1])
-                    '''ist  das richtig so? -> zu prüfen'''
-                    if len(D.successors(current_node)) == 0:
-                        to_visit.pop(-1)
-
-                    else:
-                        successors = D.successors(current_node)
-                        for successor in successors:
-                            to_visit.append(successor)
+            reach = set()
+            for successor_u in nx.descendants(D, u):
+                reach.add(successor_u)
+            for successor_v in nx.descendants(D, v):
+                reach.add(successor_v)
 
             # 2.a) check for any free pebble within all elements of reach(u,v)
-            for node in visited:
+            for node in reach:
                 if node["pebbles"] != 0:
                     break
-                '''prüfen!!! ob der mit neuer Kante weitermacht'''
-
                 # 2.b) DFS from nodes not in reach(u,v) in Supportgraph mit allen Kanten umgedreht:
-                else:
-                # Reversed Graph erstellen
-                supportgraph_reversed = D.reverse(copy=True)
 
-                # Alle Knoten auflisten, welche nicht im Reach(u,v) liegen
-                not_in_reach = [node for node in D.nodes if node not in visited]
-                # DFS für alle Knoten außerhalb des Reaches(u,v)
-                identified_component = []
-                visited = set()
-                for node in not_in_reach:
-                    # initiale Befüllung von to_visit und visited
-                    to_visit = []
-                    visited.add(node)
-                    successors = supportgraph_reversed.successors(node)
-                    for successor in successors:
-                        to_visit.append(successor)
-                    # DFS(node)
-                    while len(to_visit) != 0:
-                        current_node = to_visit[-1]
-                        if current_node not in visited:
-                            visited.add(to_visit[-1])
-                            if len(D.successors(current_node)) == 0:
-                                to_visit.pop(-1)
+            # Reversed Graph erstellen
+            D_reversed = D.reverse(copy=True)
+            # 2.b) DFS from nodes not in reach(u,v) in Supportgraph mit allen Kanten umgedreht:
+            not_reached = [node for node in D_reversed.nodes if node not in reach and node["pebbles" != 0]]
+            identified_component = list(D.nodes)
+            for w in not_reached:
+                for successor in nx.descendants(D_reversed, w):
+                    try:
+                        index_successor = identified_component.index(successor)
+                        if index_successor:
+                            identified_component.pop(identified_component[index_successor])
+                    finally:
+                        continue
 
-                            else:
-                                successors = D.successors(current_node)
-                                for successor in successors:
-                                    to_visit.append(successor)
-
-                identified_component.append(node for node in D.nodes if node not in visited)
-                # Update der n x n matrix
+            # Update der n x n matrix
             '''delete all previous Vi???'''
-            for i in range(0, len(identified_component - 1) - 1):
-                for j in range(i + 1, len(identified_component)):
+            l = len(identified_component)
+            for i in range(0, l - 1):
+                for j in range(i + 1, l):
                     index_i = list(D.nodes).index(identified_component[i])
                     index_j = list(D.nodes).index(identified_component[j])
-
                     components[index_j][index_i] = 1
                     components[index_i][index_j] = 1
 
-        edges_to_insert.pop(current_edge_to_insert)
+        edges_to_insert.pop(e)
 
-    remaining_pebbles = 0
+    count_remaining_pebbles = 0
     for node in D.nodes:
-        remaining_pebbles = remaining_pebbles + node["pebbles"]
-    print("remaining pebbles :", remaining_pebbles)
+        count_remaining_pebbles = count_remaining_pebbles + node["pebbles"]
+    print("remaining pebbles :", count_remaining_pebbles)
     if len(D.edges) < len(G.edges):
         print("edges have been left out")
     else:
