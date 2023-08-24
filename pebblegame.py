@@ -94,18 +94,21 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                         continue
 
                 if not Continue_with_descendats:
-                    continue #... with while loop to find another pebble additionally to the one, just found - or to build the edge e
+                    continue  # ... with while loop to find another pebble additionally to the one, just found - or to build the edge e
 
-
-                #Tiefensuche innerhalb des Reaches, bis Pebble gefunden wurde
-                last_node = u
+                # Tiefensuche innerhalb des Reaches, bis Pebble gefunden wurde
+                parental_node = u
                 while to_visit:
                     current_node = to_visit.pop()
                     # füge traversierte Kante visited hinzu
-                    traversed_edge = (last_node,current_node)
+                    traversed_edge = (parental_node, current_node)
                     visited.append(traversed_edge)
 
-
+                    for successor in D.successors(u):
+                        for edge in visited:
+                            if successor in edge:
+                                continue
+                        if successor["pebbles"] != 0:
 
 
                 pebbles_after_dfs = "TBD"
