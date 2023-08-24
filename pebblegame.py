@@ -65,48 +65,59 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             D.add_edge(e[0], e[1])
             u["pebbles"] = u["pebbles"] - 1
 
+        # Tiefensuche für u (eingeschlossen v) .
         else:
-            # Tiefensuche für u und v
-            while pebbles_uv < l + 1:
 
+            while u["pebbles"] + v["pebbles"] < l + 1:
 
-                # ...sofern u bereits k pebbles haben sollte, hat folglich v weniger als k pebbles.
-                # In diesem Fall, wird die Kante(u,v) zu (v,u) umgedreht
-                if u["pebbles"] == k:
+                # Sofern u bereits 5 pebbles hat, werden u und v vertauscht.
+                # stellt sicher, dass nie mehr als 5 pebbles an u liegen werden
+                if u["pebbles"] == 5:
                     u = V[V.index(e[1])]
                     v = V[V.index(e[0])]
+                visited = []
+                currentnode = u
+                to_visit = deque()
+                # Vorabrunde, damit to_visit nicht leer ist:
 
-                dfs_path_u = deque(u)
-                dfs_to_visit = deque()
-                dfs_visited = {u,v}
-                if v["pebbles"] < k:
-                    dfs_to_visit.append(v)
-                dfs_to_visit.append(u)
-                while dfs_to_visit:
-                    current_node = dfs_to_visit.pop()
-                    if current_node in dfs_path_u:
+                Continue_with_descendats = True
+                for successor in D.successors(u):
+                    if successor["pebbles"] != 0:
+                        successor["pebbles"] -= 1
+                        u["pebbles"] += 1
+                        D.remove_edge(u, successor)
+                        D.add_edge(successor, u)
+                        Continue_with_descendats = False
+                        break
+                    else:
+                        to_visit.append(successor)
                         continue
-                    dfs_to_visit.append(current_node)
-                    successors = D.successors(current_node)
-                    if successors:
-                        for successor in successors:
-                            if successor["pebbles"] == 0 and successor is not v:
-                                dfs_to_visit.append(successor)
 
-                            # pebble gefunden:
-                            else:
-                                successor["pebbles"] -= 1
-                                u["pebbles"] += 1
-                                for edge in dfs_path_u:
-                                    while edge in D.edges:
-                                        D.remove_edge(edge[0], edge[1])
-                                        D.add_edge(edge[1], edge[0])
-                                dfs_path_u.clear()
-                                break
-                    else: # also, sofern es keine Nachfolgeknoten von current_node gibt
-                        dfs_path_u.pop()
-            D.add_edge(e[0], e[1])
-            u["pebbles"] = u["pebbles"] - 1
+                if not Continue_with_descendats:
+                    continue #... with while loop to find another pebble additionally to the one, just found - or to build the edge e
+
+
+                #Tiefensuche innerhalb des Reaches, bis Pebble gefunden wurde
+                while to_visit:
+                    currentnode = to_visit.pop()
+                    to_visit.append(successor for successor in D.successors(u)
+                    while to_visit:
+                        for sucessor in D.successors(curretnode):
+                            if sucessor["pebbles"] != 0:
+                                pass
+
+                pebbles_after_dfs = "TBD"
+                if pebbles_uv == u["pebbles"] + v["pebbles"]:
+                    break
+                pebbles_uv = u["pebbles"] + v["pebbles"]
+
+            # While-Schleife erfolgreich: Genug pebbles sind vorhanden, eine neue Kante wird eingefügt.
+            if pebbles_uv >= l + 1:
+                D.add_edge(e[0], e[1])
+                u["pebbles"] = u["pebbles"] - 1
+            # While-Schleife nicht erfolgreich: Abarbeiten der nächsten Kante
+            else:
+                continue
 
         # Component Detection V2:
         # 1.) check, whether there are still more than l pebbles on (u,v)
@@ -116,9 +127,9 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         # 2.) compute reach:
         else:
             reach = set()
-            for successor_u in nx.descendants(D,u):
+            for successor_u in nx.descendants(D, u):
                 reach.add(successor_u)
-            for successor_v in nx.descendants(D,v):
+            for successor_v in nx.descendants(D, v):
                 reach.add(successor_v)
 
             # 2.a) check for any free pebble within all elements of reach(u,v)
@@ -133,7 +144,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             not_reached = [node for node in D_reversed.nodes if node not in reach and node["pebbles" != 0]]
             identified_component = list(D.nodes)
             for w in not_reached:
-                for successor in nx.descendants(D_reversed,w):
+                for successor in nx.descendants(D_reversed, w):
                     try:
                         index_successor = identified_component.index(successor)
                         if index_successor:
@@ -144,7 +155,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             # Update der n x n matrix
             '''delete all previous Vi???'''
             l = len(identified_component)
-            for i in range(0, l-1):
+            for i in range(0, l - 1):
                 for j in range(i + 1, l):
                     index_i = list(D.nodes).index(identified_component[i])
                     index_j = list(D.nodes).index(identified_component[j])
@@ -161,4 +172,3 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         print("edges have been left out")
     else:
         print("no edges have been left out")
-
