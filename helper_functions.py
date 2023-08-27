@@ -64,5 +64,16 @@ if __name__ == '__main__':
     li = [1,2,3,4]
     print(li[0:3])
 
+    G_a = nx.MultiGraph()  # testing graph from Lee-Streinu Paper (well-constrained)
+    G_a.add_nodes_from([1, 2, 3, 4, 5, 6])
+    G_a.add_edges_from(
+        [(1, 2), (1, 3), (1, 3), (1, 4), (1, 5), (1, 5), (2, 4), (2, 4), (3, 4), (3, 4), (3, 4), (3, 5), (3, 6), (3, 6),
+         (3, 6)])
+
+    for edge in nx.dfs_edges(G_a, source=1):
+        print(edge)
+        if edge[1] == 3:
+            break
+
 
 
