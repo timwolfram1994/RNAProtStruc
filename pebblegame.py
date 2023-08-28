@@ -27,6 +27,7 @@ def create5Ggraph(multigraph1G):
 
 def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     # initiate directed pebble graph D with k pebbles and zero edges
+    global Continue_with_descendats, to_visit
     G = multiDiGraph
     D = nx.MultiDiGraph()
     D.add_nodes_from(G, pebbles=k)
@@ -81,6 +82,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                 # Vorabrunde, damit ich später Knoten in to_visit habe, die ich für meine DFS abarbeiten kann
 
                 Continue_with_descendats = True
+                childenOfU = []
                 for successor in D.successors(u):
                     if successor["pebbles"] != 0:
                         successor["pebbles"] -= 1
@@ -90,14 +92,18 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                         Continue_with_descendats = False
                         break
                     else:
-                        to_visit.append(successor)
+                        childenOfU.append(successor)
                         continue
+
 
                 if not Continue_with_descendats:
                     continue  # ... with while loop to find another pebble additionally to the one, just found - or to build the edge e
 
+
                 # Tiefensuche innerhalb des Reaches, bis Pebble gefunden wurde
+
                 parental_node = u
+                to_visit.append([u,childenOfU])
                 while to_visit:
                     current_node = to_visit.pop()
                     # füge traversierte Kante visited hinzu
@@ -108,6 +114,8 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                         for edge in visited:
                             if successor in edge:
                                 continue
+                            else:
+                                to_visit.append(successor)
                         if successor["pebbles"] != 0:
 
 
