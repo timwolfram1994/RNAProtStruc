@@ -28,6 +28,9 @@ print(supportgraph.nodes[0]["pebbles"])
 #     print(edge)
 
 
+test = [('B', 'D', 0), ('A', 'E', 1), ('A', 'B', 0), ('A', 'E', 0), ('A', 'C', 0), ('C', 'E', 0), ('C', 'F', 1), ('A', 'C', 1), ('C', 'F', 2), ('C', 'D', 2), ('C', 'D', 0), ('A', 'D', 0), ('C', 'D', 1), ('B', 'D', 1), ('C', 'F', 0)]
+
+
 # print(multigraph.edges)
 
 
