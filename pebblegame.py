@@ -91,11 +91,9 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
     # randomizer for iterating over arbitrary edges
     # without replacement
-    # edges_to_insert = list(G.edges)
-    # random.shuffle(edges_to_insert)
-    edges_to_insert = [('B', 'D', 0), ('A', 'E', 1), ('A', 'B', 0), ('A', 'E', 0), ('A', 'C', 0), ('C', 'E', 0),
-                       ('C', 'F', 1), ('A', 'C', 1), ('C', 'F', 2), ('C', 'D', 2), ('C', 'D', 0), ('A', 'D', 0),
-                       ('C', 'D', 1), ('B', 'D', 1), ('C', 'F', 0)]
+    edges_to_insert = list(G.edges)
+    random.shuffle(edges_to_insert)
+    #edges_to_insert = [('B', 'D', 0), ('A', 'E', 1), ('A', 'B', 0), ('A', 'E', 0), ('A', 'C', 0), ('C', 'E', 0),('C', 'F', 1), ('A', 'C', 1), ('C', 'F', 2), ('C', 'D', 2), ('C', 'D', 0), ('A', 'D', 0),('C', 'D', 1), ('B', 'D', 1), ('C', 'F', 0)]
 
     while edges_to_insert:
         print("------------------------------------------------------------------------")
@@ -219,72 +217,19 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
 
 if __name__ == "__main__":
+
+    '''well-constraint-Beispiel:'''
     figure_3a = [("A", "B"), ("A", "C"), ("A", "C"), ("A", "D"), ("A", "E"), ("A", "E"), ("B", "D"), ("B", "D"),
                  ("C", "D"),
                  ("C", "D"), ("C", "D"),
                  ("C", "E"), ("C", "F"), ("C", "F"), ("C", "F")]
-
     well_constraint = nx.MultiDiGraph(figure_3a)
     pebblegame(well_constraint, 3, 3)
-# Backup
 
-#     '''2 Seperate Tiefensuchen für u und v'''
-#     '''Prüfe, ob u oder v bereits k pebbles hat, überspringe ggf. diese Tiefensuche'''
-#
-#     # Sofern u bereits 5 pebbles hat, werden u und v vertauscht.
-#     # stellt sicher, dass nie mehr als 5 pebbles an u liegen werden
-#     if u["pebbles"] == k:
-#         u = V[V.index(e[1])]
-#         v = V[V.index(e[0])]
-#     visited = []
-#     current_node = u
-#     to_visit = deque()
-#     # Vorabrunde, damit ich später Knoten in to_visit habe, die ich für meine DFS abarbeiten kann
-#
-#     Continue_with_descendats = True
-#     childenOfU = []
-#     for successor in D.successors(u):
-#         if successor["pebbles"] != 0:
-#             successor["pebbles"] -= 1
-#             u["pebbles"] += 1
-#             D.remove_edge(u, successor)
-#             D.add_edge(successor, u)
-#             Continue_with_descendats = False
-#             break
-#         else:
-#             childenOfU.append(successor)
-#             continue
-#
-#     if not Continue_with_descendats:
-#         continue  # ... with while loop to find another pebble additionally to the one, just found - or to build the edge e
-#
-#     # Tiefensuche innerhalb des Reaches, bis Pebble gefunden wurde
-#
-#     parental_node = u
-#     to_visit.append([u, iter(D[childenOfU])])
-#     while to_visit:
-#         current_node = to_visit.pop()
-#         # füge traversierte Kante visited hinzu
-#         traversed_edge = (parental_node, current_node)
-#         visited.append(traversed_edge)
-#
-#         for successor in D.successors(u):
-#             for edge in visited:
-#                 if successor in edge:
-#                     continue
-#                 else:
-#                     to_visit.append(successor)
-#             if successor["pebbles"] != 0:
-#
-#     pebbles_after_dfs = "TBD"
-#     if pebbles_uv == u["pebbles"] + v["pebbles"]:
-#         break
-#     pebbles_uv = u["pebbles"] + v["pebbles"]
-#
-# # While-Schleife erfolgreich: Genug pebbles sind vorhanden, eine neue Kante wird eingefügt.
-# if pebbles_uv >= l + 1:
-#     D.add_edge(e[0], e[1])
-#     u["pebbles"] = u["pebbles"] - 1
-# # While-Schleife nicht erfolgreich: Abarbeiten der nächsten Kante
-# else:
-#     continue
+    '''under-constraint-Beispiel:'''
+
+    '''well constraint-Beispiel:'''
+    # figure_3b = [("A", "B"), ("A", "C"), ("A", "C"), ("A", "D"), ("A", "E"), ("A", "E"), ("B", "D"), ("B", "D"), ("C", "D"), ("C", "D"), ("C", "D"),
+    #                             ("C", "E"), ("C", "F"), ("C", "F",)]
+    # under_constraint = nx.MultiDiGraph(figure_3b)
+    # pebblegame(under_constraint, 3, 3)
