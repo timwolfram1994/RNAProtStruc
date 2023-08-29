@@ -93,7 +93,6 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     # without replacement
     edges_to_insert = list(G.edges)
     random.shuffle(edges_to_insert)
-    #edges_to_insert = [('B', 'D', 0), ('A', 'E', 1), ('A', 'B', 0), ('A', 'E', 0), ('A', 'C', 0), ('C', 'E', 0),('C', 'F', 1), ('A', 'C', 1), ('C', 'F', 2), ('C', 'D', 2), ('C', 'D', 0), ('A', 'D', 0),('C', 'D', 1), ('B', 'D', 1), ('C', 'F', 0)]
 
     while edges_to_insert:
         print("------------------------------------------------------------------------")
