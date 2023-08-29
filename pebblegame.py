@@ -61,6 +61,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                         child_already_visited = True
                         break
                 if not child_already_visited:
+                    visited.append((parent, child))
                     if D.nodes[child]["pebbles"] != 0:
                         D.nodes[child]["pebbles"] -= 1
                         D.nodes[u]["pebbles"] += 1
