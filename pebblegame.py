@@ -36,21 +36,21 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     total_pebbles = len(V) * k
 
     def dfs_reach(digraph: nx.MultiDiGraph, u, v):
-        visited = deque(u, v)
+        nx.draw(digraph, with_labels=True)
+        pl.plot()
+        visited = set()
+        visited.add(u), visited.add(v)
         to_visit = [(u, iter(digraph.successors(u)))]
         while to_visit:
             parent, childen = to_visit[-1]
             try:
                 child = next(childen)
-                # pebble found
-                child_already_visited = False
                 if child not in visited:
-                    visited.append(child)
+                    visited.add(child)
                     to_visit.append((child, iter(digraph.successors(child))))
             except StopIteration:
                 to_visit.pop(-1)
-        visited.popleft()
-        visited.popleft()
+        visited.remove(u), visited.remove(v)
         return visited
 
     def dfs_find_pebble(digraph: nx.MultiDiGraph, u, v):
@@ -184,14 +184,13 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             continue
         # 2.) compute reach:
         else:
-            reach = set()
-            reach.add(node for node in dfs_reach(D, u, v))
-            reach.add(node for node in dfs_reach(D, v, u))
+            reach_uv = dfs_reach(D, u, v)
+            reach_uv.update(dfs_reach(D, v, u))
 
             # 2.a) check for any free pebble within all elements of reach(u,v)
             '''hier kann man auch die pebble suche funktion anwenden, damit nicht der gesamte reach berechnet wird!'''
             pebble_found = False
-            for node in reach:
+            for node in reach_uv:
                 if D.nodes[node]["pebbles"] != 0:
                     pebble_found = True
                     break
@@ -202,7 +201,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             # Reversed Graph erstellen
             D_reversed = D.reverse(copy=True)
             # 2.b) DFS from nodes not in reach(u,v) in Supportgraph mit allen Kanten umgedreht:
-            not_reached = [node for node in D_reversed.nodes if node not in reach and D.nodes[node]["pebbles"] != 0]
+            not_reached = [node for node in D_reversed.nodes if node not in reach_uv and D.nodes[node]["pebbles"] != 0]
             identified_component = list(D.nodes)
             for w in not_reached:
                 for successor in nx.descendants(D_reversed, w):
