@@ -105,7 +105,18 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     # initiate directed pebble graph D with k pebbles and zero edges
 
     # initiiere n x n matrix aller knoten zur Darstellung bereits vorhandener Komponenten
-    components = np.zeros((len(G.nodes), len(G.nodes)))
+    len_g_nodes = len(G.nodes)
+    components = np.zeros((len_g_nodes, len_g_nodes))
+
+    # components = np.zeros((len_g_nodes + 1, len_g_nodes + 1))
+    # i = iter(range(1, len_g_nodes+1))
+    # for node in D.nodes:
+    #     index = next(i)
+    #     components[0][index] = node
+    #     components[index][0] = node
+
+
+
 
     # iterate in an arbitrary order over all nodes from G
     edges_to_insert = list(G.edges)
@@ -129,7 +140,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         # prüfung ob (u,v) in irgendeiner Komponente (matrix zelle true): falls ja, nächste Kante
         index_u = V.index(u)
         index_v = V.index(v)
-        if components[index_u][index_v] == 1:
+        if components[index_u+0][index_v+0] == 1:
             print("Edge already in rigid component identified")
             continue
 
