@@ -1,6 +1,5 @@
 import random
 import pylab as pl
-from collections import deque
 import networkx as nx
 import numpy as np
 
@@ -203,6 +202,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             D_reversed = D.reverse(copy=True)
             # 2.b) DFS from nodes not in reach(u,v) in Supportgraph mit allen Kanten umgedreht:
             not_reached = [node for node in D_reversed.nodes if node not in reach_uv and D.nodes[node]["pebbles"] != 0]
+
             identified_component = list(D.nodes)
             for w in not_reached:
                 for successor in nx.descendants(D_reversed, w):
@@ -227,11 +227,13 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             print("well-constraint; l pebbles remain. no edge has been left out")
         else:
             print("over-constraint; l pebbles remain. ,",len(G.edges) - len(D.edges)," have been left out")
-    if total_pebbles > l:
+    elif total_pebbles > l:
         if len(D.edges) == len(G.edges):
             print("under-constraint; ",total_pebbles," pebbles remain. no edge has been left out")
         else:
             print("other: ",total_pebbles," pebbles remain,",len(G.edges) - len(D.edges)," have been left out")
+    else:
+        print("error!",total_pebbles, "pebbles remain")
     print("Matrix steifer Komponenten: \n", components)
 
 
