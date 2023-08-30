@@ -104,69 +104,57 @@ def component_detection_1(G, k, l):
     D = nx.MultiDiGraph()
     D.add_nodes_from(G)
     nx.set_node_attributes(D, k, "pebbles")
-    component_list = []
-
-    for edge in G.edges():
-        edgeCount1 = D.number_of_edges()
-
-        if D.nodes[edge[0]]['pebbles'] + D.nodes[edge[1]][
-            'pebbles'] >= l + 1:  # check whether u and v have enough pebbles
-            D.add_edge(edge[0], edge[1])
-            D.nodes[edge[0]]['pebbles'] -= 1
+    edgeCount1 = len(D.edges())
+    components = []
+    randomized_edgelist = list(random.sample(list(G.edges()), len(G.edges())))
+    # print(f'randomized edgelist: {randomized_edgelist}')
+    for edge in randomized_edgelist:  # try to append edges to D in a randomized manner
+        u = edge[0]
+        v = edge[1]
+        if D.nodes[u]['pebbles'] + D.nodes[v]['pebbles'] >= l + 1:  # check whether u and v have enough pebbles
+            D.add_edge(u, v)
+            D.nodes[u]['pebbles'] -= 1  # remove one pebble from u
 
         else:  # collect pebbles
-            while D.nodes[edge[0]]['pebbles'] + D.nodes[edge[1]]['pebbles'] < l + 1:
-                compare1 = D.nodes[edge[0]]['pebbles'] + D.nodes[edge[1]]['pebbles']
+            while D.nodes[u]['pebbles'] + D.nodes[v]['pebbles'] < l + 1:
+                compare1 = D.nodes[u]['pebbles'] + D.nodes[v][
+                    'pebbles']  # break out of while loop if pebbles didn't change
 
-                dfslist_u = list(nx.dfs_edges(D, edge[0]))  # depth first search from u
-                for _edge in dfslist_u:  # u of edge is starting node
-                    if edge[1] in _edge or edge[0] == _edge[1]:  # avoid taking pebble from u or v
-                        continue
-                    if D.nodes[_edge[1]]['pebbles'] > 0:  # first edge is (u, u+1)
-                        D.nodes[_edge[1]]['pebbles'] -= 1  # take pebble from node
-                        D.nodes[edge[0]]['pebbles'] += 1  # add pebble to starting node
-                        # reverse the directions of the edges,
-                        for __edge in list(pairwise(nx.shortest_path(D, source=edge[0], target=_edge[1]))): # "pairwise" transforms nodelist to edgelist
-                            while __edge in D.edges():
-                                D.remove_edge(__edge[0], __edge[1])
-                                D.add_edge(__edge[1], __edge[0])
+                if D.nodes[u][
+                    'pebbles'] < k:  # vertices must not have more than k pebbles. so we don't do a dfs if we have already 5
+                    D = pebble_collection(D, u, v)
 
-                        break  # if we found a pebble we stop the dfs
+                if D.nodes[v][
+                    'pebbles'] < k:  # vertices must not have more than k pebbles. so we don't do a dfs if we have already 5?
+                    D = pebble_collection(D, v, u)  # v will now be handled as u
 
-                dfslist_v = list(nx.dfs_edges(D, edge[1]))  # depth first search from v
-                for  _edge in enumerate(dfslist_v):  # v of edge is starting node
-                    if edge[0] in _edge or edge[1] == _edge[1]:  # avoid taking pebble from u or v
-                        continue
-                    if D.nodes[_edge[1]]['pebbles'] > 0:  # first edge is (u, u+1)
-                        D.nodes[_edge[1]]['pebbles'] -= 1  # take pebble from node
-                        D.nodes[edge[0]]['pebbles'] += 1  # add pebble to starting node
-                        # nun die Kanten umdrehen
-                        for __edge in dfslist_v[0:idx + 1]:  # reverse the directions of the edges
-                            D.remove_edge(__edge[0], __edge[1])
-                            D.add_edge(__edge[1], __edge[0])
-                        break  # if we found a pebble we stop the dfs
-
-                compare2 = D.nodes[edge[0]]['pebbles'] + D.nodes[edge[1]][
+                compare2 = D.nodes[u]['pebbles'] + D.nodes[v][
                     'pebbles']  # break out of while loop if pebbles didn't change
                 if compare1 == compare2:
                     break
 
-            if D.nodes[edge[0]]['pebbles'] + D.nodes[edge[1]][
+            if D.nodes[u]['pebbles'] + D.nodes[v][
                 'pebbles'] >= l + 1:  # check whether u and v have enough pebbles
-                D.add_edge(edge[0], edge[1])  # insert directed edge uv in D
-                D.nodes[edge[0]]['pebbles'] -= 1
-
-        edgeCount2 = D.number_of_edges()
+                D.add_edge(u, v)  # insert directed edge uv in D
+                D.nodes[u]['pebbles'] -= 1
 
         ### now let's start the component detection ###
-        components = []
 
+        edgeCount2 = len(D.edges())
         if edgeCount2 > edgeCount1:  # if edge has been inserted
             pebbleCount = D.nodes[edge[0]]['pebbles'] + D.nodes[edge[1]]['pebbles']
             if pebbleCount <= l and pebbleCount > 0:  # if we have not more than l pebbles in u and v
                 # compute Reach(u,v) = Reach(u) U Reach(v)
-                reach_u = list(nx.dfs_successors(D, source=edge[0]).keys())  # compute Reach(u)
-                reach_v = list(nx.dfs_successors(D, source=edge[1]).keys())  # compute Reach(v)
+                reach_u = []
+                reach_v = []
+                for succ in nx.dfs_successors(D, source=edge[0]):
+                    if succ != edge[0] and succ != edge[1]:
+                        reach_u.append(succ)
+                for succ in nx.dfs_successors(D, source=edge[1]):
+                    if succ != edge[0] and succ != edge[1]:
+                        reach_v.append(succ)
+
+                # compute Reach(v)
                 reach_uv = reach_u + reach_v
                 pebbleCount = 0
                 for node in reach_uv:
@@ -182,6 +170,7 @@ def component_detection_1(G, k, l):
                             queue.append(edge[0])
                     while len(queue) > 0:
                         w = queue.pop(0)
+                        print(f'queue-length: {len(queue)}')
                         reach_w = list(nx.dfs_successors(D, source=w).keys())
                         pebbleCount = 0
                         for __node in reach_w:
@@ -203,8 +192,10 @@ def component_detection_1(G, k, l):
                     V_prime.remove(edge[0])
                     V_prime.remove(edge[1])
                     components.append(V_prime)
+    print(components)
 
-            # jetzt habe ich zwar ne component aber weiß ich ob die component rigid ist oder nicht?
+
+            # jetzt habe ich zwar ne component aber weiß ich ob die component rigid ist oder nicht? doch: gibt steife komponenten aus
 
     # debug testrecke
     #print(f'number edges D: {D.number_of_edges()}')
@@ -267,5 +258,7 @@ if __name__ == '__main__':
 
    # print(G_b)
     print(f'Graph b) should be under-constraint. Here it is {pebblegame(G_b, 3, 3)}')
-    #print(component_detection_1(G_a, 3, 3))
+    print(component_detection_1(G_a, 3, 3))
+
+    print(f'G_a reference edgelist:{ [(1,2),(2,4),(2,4),(3,2),(3,2),(3,4),(4,3),(4,3),(4,1),(5,1),(5,1),(5,3),(6,3),(6,3),(6,3)]}')
 

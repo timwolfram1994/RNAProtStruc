@@ -108,11 +108,8 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     components = np.zeros((len(G.nodes), len(G.nodes)))
 
     # iterate in an arbitrary order over all nodes from G
-    # edges_to_insert = list(G.edges)
-    # random.shuffle(edges_to_insert)
-    edges_to_insert = [('A', 'B', 0), ('C', 'D', 0), ('B', 'D', 0), ('C', 'F', 2), ('C', 'D', 1), ('A', 'E', 0),
-                       ('C', 'F', 0), ('A', 'C', 1), ('C', 'E', 0), ('A', 'E', 1), ('B', 'D', 1), ('C', 'F', 1),
-                       ('A', 'D', 0), ('C', 'D', 2), ('A', 'C', 0)]
+    edges_to_insert = list(G.edges)
+    random.shuffle(edges_to_insert)
     while edges_to_insert:
         print("------------------------------------------------------------------------")
         print("REMAINING EDGES : ", len(edges_to_insert))
@@ -237,7 +234,7 @@ if __name__ == "__main__":
                  ("C", "D"), ("C", "D"),
                  ("C", "E"), ("C", "F"), ("C", "F"), ("C", "F")]
     well_constraint = nx.MultiDiGraph(figure_3a)
-    pebblegame(well_constraint, 3, 3)
+    #pebblegame(well_constraint, 3, 3)
 
     '''under-constraint-Beispiel:'''
 
@@ -246,3 +243,9 @@ if __name__ == "__main__":
     #                             ("C", "E"), ("C", "F"), ("C", "F",)]
     # under_constraint = nx.MultiDiGraph(figure_3b)
     # pebblegame(under_constraint, 3, 3)
+
+    e_oct = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6), (3, 4), (3, 5), (3, 6), (4, 5),
+             (4, 6), (5, 6)]
+    G = nx.from_edgelist(e_oct)
+    G_5 = create5Ggraph(G)
+    pebblegame(G_5, 5, 6)
