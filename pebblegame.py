@@ -132,6 +132,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         index_u = V.index(u)
         index_v = V.index(v)
         if components[index_u][index_v] == 1:
+            print("Edge already in rigid component identified")
             continue
 
         # Tiefensuche für u (eingeschlossen v)
@@ -221,11 +222,16 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                     components[index_j][index_i] = 1
                     components[index_i][index_j] = 1
 
-    print("remaining pebbles :", total_pebbles)
-    if len(D.edges) < len(G.edges):
-        print("Some edges have been left out")
-    else:
-        print("no edges have been left out")
+    if total_pebbles == l:
+        if len(D.edges) == len(G.edges):
+            print("well-constraint; l pebbles remain. no edge has been left out")
+        else:
+            print("over-constraint; l pebbles remain. ,",len(G.edges) - len(D.edges)," have been left out")
+    if total_pebbles > l:
+        if len(D.edges) == len(G.edges):
+            print("under-constraint; ",total_pebbles," pebbles remain. no edge has been left out")
+        else:
+            print("other: ",total_pebbles," pebbles remain,",len(G.edges) - len(D.edges)," have been left out")
     print("Matrix steifer Komponenten: \n", components)
 
 
