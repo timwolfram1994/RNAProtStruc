@@ -113,12 +113,9 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         # prüfung ob (u,v) in irgendeiner Komponente (matrix zelle true): falls ja, nächste Kante
         index_u = V.index(u)
         index_v = V.index(v)
-        if index_u < index_v:
-            if components[index_u][index_v] == 1:
-                continue
-        else:
-            if components[index_v][index_u] == 1:
-                continue
+        if components[index_u][index_v] == 1:
+            continue
+
 
         # Tiefensuche für u (eingeschlossen v)
         while D.nodes[u]["pebbles"] + D.nodes[v]["pebbles"] < (l + 1):
@@ -201,7 +198,6 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                         continue
 
             # Update der n x n matrix
-            '''delete all previous Vi???'''
             l = len(identified_component)
             for i in range(0, l - 1):
                 for j in range(i + 1, l):
