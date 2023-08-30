@@ -111,9 +111,14 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             continue
 
         # prüfung ob (u,v) in irgendeiner Komponente (matrix zelle true): falls ja, nächste Kante
-        if components[V.index(u)][
-            V.index(v)] == 1:
-            continue
+        index_u = V.index(u)
+        index_v = V.index(v)
+        if index_u < index_v:
+            if components[index_u][index_v] == 1:
+                continue
+        else:
+            if components[index_v][index_u] == 1:
+                continue
 
         # Tiefensuche für u (eingeschlossen v)
         while D.nodes[u]["pebbles"] + D.nodes[v]["pebbles"] < (l + 1):
@@ -216,7 +221,6 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
 
 if __name__ == "__main__":
-
     '''well-constraint-Beispiel:'''
     figure_3a = [("A", "B"), ("A", "C"), ("A", "C"), ("A", "D"), ("A", "E"), ("A", "E"), ("B", "D"), ("B", "D"),
                  ("C", "D"),
