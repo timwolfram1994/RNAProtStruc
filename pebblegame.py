@@ -193,14 +193,17 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
             while not_reached:
                 w = not_reached.pop()
-                dfs_w.update(dfs_reach_reverse(D,w,dfs_w))
+                dfs_w.update(dfs_reach_reverse(D, w, dfs_w))
                 for node in dfs_w:
                     if node in not_reached:
                         not_reached.remove(node)
 
-            for reached_node in dfs_w:
-                if reached_node in identified_component:
-                        identified_component.remove(reached_node)
+            for reached_node_from_w in dfs_w:
+                if reached_node_from_w in identified_component:
+                    identified_component.remove(reached_node_from_w)
+
+            for reached_node_from_uv in reach_uv:
+                identified_component.add(reached_node_from_uv)
 
             # Update der n x n matrix
             identified_component = list(identified_component)
@@ -216,12 +219,12 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         if len(D.edges) == len(G.edges):
             print("well-constraint; l pebbles remain. no edge has been left out")
         else:
-            print("over-constraint; l pebbles remain. ,", len(G.edges) - len(D.edges), " have been left out")
+            print("over-constraint; l pebbles remain. ,", len(G.edges) - len(D.edges), "have been left out")
     elif total_pebbles > l:
         if len(D.edges) == len(G.edges):
-            print("under-constraint; ", total_pebbles, " pebbles remain. no edge has been left out")
+            print("under-constraint; ", total_pebbles, "pebbles remain. no edge has been left out")
         else:
-            print("other: ", total_pebbles, " pebbles remain,", len(G.edges) - len(D.edges), " have been left out")
+            print("other: ", total_pebbles, "pebbles remain,", len(G.edges) - len(D.edges), "edges have been left out")
     else:
         print("error!", total_pebbles, "pebbles remain")
     print("Matrix steifer Komponenten: \n", components)
@@ -229,23 +232,30 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
 if __name__ == "__main__":
     '''well-constraint-Beispiel:'''
-    figure_3a = [("A", "B"), ("A", "C"), ("A", "C"), ("A", "D"), ("A", "E"), ("A", "E"), ("B", "D"), ("B", "D"),
-                 ("C", "D"),
-                 ("C", "D"), ("C", "D"),
-                 ("C", "E"), ("C", "F"), ("C", "F"), ("C", "F")]
-    well_constraint = nx.MultiDiGraph(figure_3a)
-    #pebblegame(well_constraint, 3, 3)
-
+    # figure_3a = [("A", "B"), ("A", "C"), ("A", "C"), ("A", "D"), ("A", "E"), ("A", "E"), ("B", "D"), ("B", "D"),
+    #              ("C", "D"),
+    #              ("C", "D"), ("C", "D"),
+    #              ("C", "E"), ("C", "F"), ("C", "F"), ("C", "F")]
+    # well_constraint = nx.MultiDiGraph(figure_3a)
+    # pebblegame(well_constraint, 3, 3)
+    #
     '''under-constraint-Beispiel:'''
+    # # figure_3b = [("A", "B"), ("A", "C"), ("A", "C"), ("A", "D"), ("A", "E"), ("A", "E"), ("B", "D"), ("B", "D"), ("C", "D"), ("C", "D"), ("C", "D"),
+    # #                             ("C", "E"), ("C", "F"), ("C", "F",)]
+    # # under_constraint = nx.MultiDiGraph(figure_3b)
+    # # pebblegame(under_constraint, 3, 3)
 
-    '''well constraint-Beispiel:'''
-    # figure_3b = [("A", "B"), ("A", "C"), ("A", "C"), ("A", "D"), ("A", "E"), ("A", "E"), ("B", "D"), ("B", "D"), ("C", "D"), ("C", "D"), ("C", "D"),
-    #                             ("C", "E"), ("C", "F"), ("C", "F",)]
-    # under_constraint = nx.MultiDiGraph(figure_3b)
-    # pebblegame(under_constraint, 3, 3)
+    '''over-constraint-Beispiel:'''
+    # full_graph_octaeder = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6), (3, 4), (3, 5), (3, 6), (4, 5),
+    #                        (4, 6), (5, 6)]
+    # G = nx.from_edgelist(full_graph_octaeder)
+    # G_5 = create5Ggraph(G)
+    # pebblegame(G_5, 5, 6)
 
-    e_oct = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6), (3, 4), (3, 5), (3, 6), (4, 5),
-             (4, 6), (5, 6)]
-    G = nx.from_edgelist(e_oct)
+    '''under-constraint-Beispiel but definetely with rigid components:'''
+    full_graph_octaeder_and_additional_limb = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6),
+                                               (3, 4), (3, 5), (3, 6), (4, 5),
+                                               (4, 6), (5, 6), (6, 7)]
+    G = nx.from_edgelist(full_graph_octaeder_and_additional_limb)
     G_5 = create5Ggraph(G)
     pebblegame(G_5, 5, 6)
