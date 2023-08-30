@@ -37,16 +37,16 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     def dfs_find_pebble(digraph: nx.MultiDiGraph, u, v):
         for node in D.nodes:
             print(node, ": ", D.nodes[node]["pebbles"])
-        pos_nodes = {
-            "A": (0, 0),
-            "B": (-0.1, -0.1),
-            "C": (0.1, -0.1),
-            "D": (0, -0.2),
-            "E": (0.2, 0),
-            "F": (0.2, -0.2)
-        }
-        # nx.draw(D, with_labels=True,pos = pos_nodes)
-        # pl.show()
+        # pos_nodes = {
+        #     "A": (0, 0),
+        #     "B": (-0.1, -0.1),
+        #     "C": (0.1, -0.1),
+        #     "D": (0, -0.2),
+        #     "E": (0.2, 0),
+        #     "F": (0.2, -0.2)
+        # }
+        # # nx.draw(D, with_labels=True,pos = pos_nodes)
+        # # pl.show()
         visited = []
         visited.append((u, v))
         to_visit = [(u, iter(digraph.successors(u)))]
@@ -214,7 +214,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         print("Some edges have been left out")
     else:
         print("no edges have been left out")
-
+    print("Matrix steifer Komponenten: \n", components)
 
 if __name__ == "__main__":
     '''well-constraint-Beispiel:'''
