@@ -33,6 +33,25 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     D = nx.MultiDiGraph()
     D.add_nodes_from(G, pebbles=k)
     V = list(D.nodes)
+    total_pebbles = len(V) * k
+
+    def dfs_reach(digraph: nx.MultiDiGraph, u, v):
+        visited = deque(u, v)
+        to_visit = [(u, iter(digraph.successors(u)))]
+        while to_visit:
+            parent, childen = to_visit[-1]
+            try:
+                child = next(childen)
+                # pebble found
+                child_already_visited = False
+                if child not in visited:
+                    visited.append(child)
+                    to_visit.append((child, iter(digraph.successors(child))))
+            except StopIteration:
+                to_visit.pop(-1)
+        visited.popleft()
+        visited.popleft()
+        return visited
 
     def dfs_find_pebble(digraph: nx.MultiDiGraph, u, v):
         for node in D.nodes:
@@ -65,7 +84,6 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                     if D.nodes[child]["pebbles"] != 0:
                         D.nodes[child]["pebbles"] -= 1
                         D.nodes[u]["pebbles"] += 1
-                        visited.append((parent, child))
                         # Pfade umdrehen, damit der Pfad von hinten nach vorn effizienter durchgegangen wird
                         visited.reverse()
                         visited.pop(
@@ -116,7 +134,6 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         if components[index_u][index_v] == 1:
             continue
 
-
         # Tiefensuche für u (eingeschlossen v)
         while D.nodes[u]["pebbles"] + D.nodes[v]["pebbles"] < (l + 1):
             print("DFS required, next: DFS(u), peb(u+v) = ", D.nodes[u]["pebbles"] + D.nodes[v]["pebbles"])
@@ -155,6 +172,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         if D.nodes[u]["pebbles"] + D.nodes[v]["pebbles"] >= l + 1:
             D.add_edge(e[0], e[1])
             D.nodes[u]["pebbles"] = D.nodes[u]["pebbles"] - 1
+            total_pebbles -= 1
             edge_inserted = True
 
         if not edge_inserted:
@@ -167,10 +185,8 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         # 2.) compute reach:
         else:
             reach = set()
-            for successor_u in nx.descendants(D, u):
-                reach.add(successor_u)
-            for successor_v in nx.descendants(D, v):
-                reach.add(successor_v)
+            reach.add(node for node in dfs_reach(D, u, v))
+            reach.add(node for node in dfs_reach(D, v, u))
 
             # 2.a) check for any free pebble within all elements of reach(u,v)
             '''hier kann man auch die pebble suche funktion anwenden, damit nicht der gesamte reach berechnet wird!'''
@@ -206,15 +222,13 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                     components[index_j][index_i] = 1
                     components[index_i][index_j] = 1
 
-    count_remaining_pebbles = 0
-    for node in D.nodes:
-        count_remaining_pebbles = count_remaining_pebbles + D.nodes[node]["pebbles"]
-    print("remaining pebbles :", count_remaining_pebbles)
+    print("remaining pebbles :", total_pebbles)
     if len(D.edges) < len(G.edges):
         print("Some edges have been left out")
     else:
         print("no edges have been left out")
     print("Matrix steifer Komponenten: \n", components)
+
 
 if __name__ == "__main__":
     '''well-constraint-Beispiel:'''
