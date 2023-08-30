@@ -26,6 +26,24 @@ def create5Ggraph(multigraph1G):
 
 
 def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
+    def dfs_reach_reverse(digraph: nx.MultiDiGraph, u, v):
+        visited = set()
+        visited.add(u)
+        for node in v:
+            visited.add(node)
+        to_visit = [(u, iter(digraph.predecessors(u)))]
+        while to_visit:
+            child, parents = to_visit[-1]
+            try:
+                parent = next(parents)
+                if parent not in visited:
+                    visited.add(parent)
+                    to_visit.append((parent, iter(digraph.predecessors(parent))))
+            except StopIteration:
+                to_visit.pop(-1)
+        visited.remove(u)
+        return visited
+
     def dfs_reach(digraph: nx.MultiDiGraph, u, v):
         visited = set()
         visited.add(u), visited.add(v)
@@ -169,24 +187,26 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                 continue
 
             # 2.b) DFS from nodes not in reach(u,v) in Supportgraph with all edges reversed:
-            nx.draw(D, with_labels=True)
-            plt.show()
-            for node in D.nodes:
-                print(node,": ",D.nodes[node]["pebbles"])
-            D_reversed = D.reverse(copy=True)
-            not_reached = [node for node in D_reversed.nodes if node not in reach_uv and D.nodes[node]["pebbles"] != 0]
-            nx.draw(D_reversed, with_labels=True)
-            plt.show()
+            '''alle knoten von 2a reach_uv haben folglich 0 pebbles und gehören zur Komponente!, auch wenn im reach von w'''
+            not_reached = [node for node in D.nodes if node not in reach_uv and D.nodes[node]["pebbles"] != 0]
             print("Reach(u,v) :", reach_uv)
 
-            identified_component = list(D.nodes)
-            for w in not_reached:
-                for successor in nx.descendants(D_reversed, w):
-                    if successor in identified_component:
-                        identified_component.remove(successor)
+            identified_component = set(D.nodes)
+            dfs_w = set()
 
+            while not_reached:
+                w = not_reached.pop()
+                dfs_w.update(dfs_reach_reverse(D,w,dfs_w))
+                for node in dfs_w:
+                    if node in not_reached:
+                        not_reached.remove(node)
+
+            for reached_node in dfs_w:
+                if reached_node in identified_component:
+                        identified_component.remove(reached_node)
 
             # Update der n x n matrix
+            identified_component = list(identified_component)
             matrix_len = len(identified_component)
             for i in range(0, matrix_len - 1):
                 for j in range(i + 1, matrix_len):
@@ -194,7 +214,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                     index_j = list(D.nodes).index(identified_component[j])
                     components[index_j][index_i] = 1
                     components[index_i][index_j] = 1
-
+    print("------------------------------------------------------------------------")
     if total_pebbles == l:
         if len(D.edges) == len(G.edges):
             print("well-constraint; l pebbles remain. no edge has been left out")
