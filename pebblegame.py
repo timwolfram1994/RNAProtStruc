@@ -94,7 +94,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                         to_visit.append((child, iter(digraph.successors(child))))
             except StopIteration:
                 to_visit.pop(-1)
-        return False
+        return visited
 
     # Definitions
     G = multiDiGraph
@@ -107,16 +107,6 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     # initiiere n x n matrix aller knoten zur Darstellung bereits vorhandener Komponenten
     len_g_nodes = len(G.nodes)
     components = np.zeros((len_g_nodes, len_g_nodes))
-
-    # components = np.zeros((len_g_nodes + 1, len_g_nodes + 1))
-    # i = iter(range(1, len_g_nodes+1))
-    # for node in D.nodes:
-    #     index = next(i)
-    #     components[0][index] = node
-    #     components[index][0] = node
-
-
-
 
     # iterate in an arbitrary order over all nodes from G
     edges_to_insert = list(G.edges)
@@ -137,12 +127,12 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         if u == v:
             continue
 
-        # prüfung ob (u,v) in irgendeiner Komponente (matrix zelle true): falls ja, nächste Kante
-        index_u = V.index(u)
-        index_v = V.index(v)
-        if components[index_u+0][index_v+0] == 1:
-            print("Edge already in rigid component identified")
-            continue
+        # # prüfung ob (u,v) in irgendeiner Komponente (matrix zelle true): falls ja, nächste Kante
+        # index_u = V.index(u)
+        # index_v = V.index(v)
+        # if components[int(index_u)][int(index_v)] == 1:
+        #     print("Edge already in rigid component identified")
+        #     continue
 
         # Tiefensuche für u (eingeschlossen v)
         while D.nodes[u]["pebbles"] + D.nodes[v]["pebbles"] < (l + 1):
@@ -150,7 +140,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             if D.nodes[u]["pebbles"] == k:
                 dfs_u = False
 
-            if dfs_u:
+            if dfs_u == True:
                 dfs_u = dfs_find_pebble(D, u, v)
                 # redirect pebble-path
             if D.nodes[u]["pebbles"] + D.nodes[v]["pebbles"] >= (l + 1):
@@ -158,10 +148,10 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             dfs_v = True
             if D.nodes[v]["pebbles"] == k:
                 dfs_v = False
-            if dfs_v:
+            if dfs_v == True:
                 dfs_v = dfs_find_pebble(D, v, u)
 
-            if not dfs_u and not dfs_v:
+            if dfs_u != True and dfs_v != True:
                 break
 
         # (nach Tiefensuche) einfügen der neuen Kante (u,v)
@@ -181,50 +171,58 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             continue
         # 2.) compute reach:
         else:
-            reach_uv = dfs_reach(D, u, v)
-            reach_uv.update(dfs_reach(D, v, u))
-
-            # 2.a) check for any free pebble within all elements of reach(u,v)
-            '''hier kann man auch die pebble suche funktion anwenden, damit nicht der gesamte reach berechnet wird!'''
-            pebble_found = False
-            for node in reach_uv:
-                if D.nodes[node]["pebbles"] != 0:
-                    pebble_found = True
-                    break
-            if pebble_found:
+            # 2a) suche im Reach von u oder v nach einem pebble. Ist eins vorhanden, wird die suche gestoppt und "True" wiedergegeben.
+            # Die Component Detection bricht dann ab.
+            # -> berechnet nicht zwingend den ganzen reach, sofern nicht erforderlich und spart somit Zeit
+            pebble_in_reach_u = dfs_find_pebble(D, u, v)
+            if pebble_in_reach_u == True:
+                continue
+            pebble_in_reach_v = dfs_find_pebble(D, v, u)
+            if pebble_in_reach_v == True:
                 continue
 
-            # 2.b) DFS from nodes not in reach(u,v) in Supportgraph with all edges reversed:
-            '''alle knoten von 2a reach_uv haben folglich 0 pebbles und gehören zur Komponente!, auch wenn im reach von w'''
-            not_reached = [node for node in D.nodes if node not in reach_uv and D.nodes[node]["pebbles"] != 0]
-            print("Reach(u,v) :", reach_uv)
+            # sofern kein pebble gefunden wurde, wird für 2b) der reach(u,v) \ u,v bereitgestellt
+            reach_uv = set()
+            reach_uv = set(pebble_in_reach_v).update(pebble_in_reach_u)
 
-            identified_component = set(D.nodes)
-            dfs_w = set()
+            if u in reach_uv:
+                reach_uv.remove(u)
+            if v in reach_uv:
+                reach_uv.remove(v)
 
-            while not_reached:
-                w = not_reached.pop()
-                dfs_w.update(dfs_reach_reverse(D, w, dfs_w))
-                for node in dfs_w:
-                    if node in not_reached:
-                        not_reached.remove(node)
-
-            for reached_node_from_w in dfs_w:
-                if reached_node_from_w in identified_component:
-                    identified_component.remove(reached_node_from_w)
-
-            for reached_node_from_uv in reach_uv:
-                identified_component.add(reached_node_from_uv)
-
-            # Update der n x n matrix
-            identified_component = list(identified_component)
-            matrix_len = len(identified_component)
-            for i in range(0, matrix_len - 1):
-                for j in range(i + 1, matrix_len):
-                    index_i = list(D.nodes).index(identified_component[i])
-                    index_j = list(D.nodes).index(identified_component[j])
-                    components[index_j][index_i] = 1
-                    components[index_i][index_j] = 1
+        #     # 2.b) DFS from nodes not in reach(u,v) in Supportgraph with all edges reversed:
+        #     '''alle knoten von 2a reach_uv haben folglich 0 pebbles und gehören zur Komponente!, auch wenn im reach von w'''
+        not_reached = [node for node in D.nodes if node not in reach_uv and D.nodes[node]["pebbles"] != 0]
+        nx.draw(D, withlabels = True)
+        plt.show
+        print("Reach(u,v) :", reach_uv)
+        #
+        identified_component = set(D.nodes)
+        dfs_w = set()
+        #
+        while not_reached:
+            w = not_reached.pop()
+            dfs_w.update(dfs_reach_reverse(D, w, dfs_w))
+        #         for node in dfs_w:
+        #             if node in not_reached:
+        #                 not_reached.remove(node)
+        #
+        #     for reached_node_from_w in dfs_w:
+        #         if reached_node_from_w in identified_component:
+        #             identified_component.remove(reached_node_from_w)
+        #
+        #     for reached_node_from_uv in reach_uv:
+        #         identified_component.add(reached_node_from_uv)
+        #
+        #     # Update der n x n matrix
+        #     identified_component = list(identified_component)
+        #     matrix_len = len(identified_component)
+        #     for i in range(0, matrix_len - 1):
+        #         for j in range(i + 1, matrix_len):
+        #             index_i = list(D.nodes).index(identified_component[i])
+        #             index_j = list(D.nodes).index(identified_component[j])
+        #             components[index_j][index_i] = 1
+        #             components[index_i][index_j] = 1
     print("------------------------------------------------------------------------")
     if total_pebbles == l:
         if len(D.edges) == len(G.edges):
@@ -251,22 +249,22 @@ if __name__ == "__main__":
     # pebblegame(well_constraint, 3, 3)
     #
     '''under-constraint-Beispiel:'''
-    # # figure_3b = [("A", "B"), ("A", "C"), ("A", "C"), ("A", "D"), ("A", "E"), ("A", "E"), ("B", "D"), ("B", "D"), ("C", "D"), ("C", "D"), ("C", "D"),
-    # #                             ("C", "E"), ("C", "F"), ("C", "F",)]
-    # # under_constraint = nx.MultiDiGraph(figure_3b)
-    # # pebblegame(under_constraint, 3, 3)
+    # figure_3b = [("A", "B"), ("A", "C"), ("A", "C"), ("A", "D"), ("A", "E"), ("A", "E"), ("B", "D"), ("B", "D"), ("C", "D"), ("C", "D"), ("C", "D"),
+    #                             ("C", "E"), ("C", "F"), ("C", "F",)]
+    # under_constraint = nx.MultiDiGraph(figure_3b)
+    # pebblegame(under_constraint, 3, 3)
 
     '''over-constraint-Beispiel:'''
-    # full_graph_octaeder = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6), (3, 4), (3, 5), (3, 6), (4, 5),
-    #                        (4, 6), (5, 6)]
-    # G = nx.from_edgelist(full_graph_octaeder)
-    # G_5 = create5Ggraph(G)
-    # pebblegame(G_5, 5, 6)
-
-    '''under-constraint-Beispiel but definetely with rigid components:'''
-    full_graph_octaeder_and_additional_limb = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6),
-                                               (3, 4), (3, 5), (3, 6), (4, 5),
-                                               (4, 6), (5, 6), (6, 7)]
-    G = nx.from_edgelist(full_graph_octaeder_and_additional_limb)
+    full_graph_octaeder = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6), (3, 4), (3, 5), (3, 6), (4, 5),
+                           (4, 6), (5, 6)]
+    G = nx.from_edgelist(full_graph_octaeder)
     G_5 = create5Ggraph(G)
     pebblegame(G_5, 5, 6)
+
+    '''under-constraint-Beispiel but definetely with rigid components:'''
+    # full_graph_octaeder_and_additional_limb = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6),
+    #                                            (3, 4), (3, 5), (3, 6), (4, 5),
+    #                                            (4, 6), (5, 6), (6, 7)]
+    # G = nx.from_edgelist(full_graph_octaeder_and_additional_limb)
+    # G_5 = create5Ggraph(G)
+    # pebblegame(G_5, 5, 6)
