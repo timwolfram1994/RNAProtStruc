@@ -8,6 +8,8 @@ import pebblegame_copy as pg
 # import pdb_to_graph
 import os
 
+# to do: graphen einfärben, steife komponententen in rigidty matrix testen
+
 def pebble_collection(D, u, v):
 
 
@@ -161,6 +163,7 @@ def component_detection_1(G, k, l):
                     pebbleCount += D.nodes[node]['pebbles']
                 if pebbleCount == 0:  # if any w in reach(u,v) has at least one pebble return empty set
                     queue = []
+                    queue_memory = set() # to check if a node has ever put in queue before
                     nodes_outside_reach = list(D.nodes.keys())
                     for _node in nodes_outside_reach:
                         if _node in reach_uv:
@@ -168,13 +171,16 @@ def component_detection_1(G, k, l):
                     for edge in D.edges():
                         if edge[0] in nodes_outside_reach and edge[1] in reach_uv:
                             queue.append(edge[0])
+                            queue_memory.add(edge[0])
                     while len(queue) > 0:
                         w = queue.pop(0)
                         print(f'queue-length: {len(queue)}')
                         reach_w = list(nx.dfs_successors(D, source=w).keys())
+                        while u in reach_w: reach_w.remove(u)
+                        while v in reach_w: reach_w.remove(v)
                         pebbleCount = 0
                         for __node in reach_w:
-                            if __node not in edge:  # check pebblecount in reach w (without u and v)
+                            if __node not in edge:  # check pebblecount in Reach(w) (without u and v)
                                 pebbleCount += D.nodes[__node]['pebbles']
                         if pebbleCount == 0:
                             V_prime = reach_uv + reach_w
@@ -183,8 +189,9 @@ def component_detection_1(G, k, l):
                                 if _node in reach_w:
                                     nodes_outside_reach.remove(_node)
                             for edge in D.edges():
-                                if edge[0] in nodes_outside_reach and edge[1] in reach_w:
+                                if edge[0] in nodes_outside_reach and edge[1] in reach_w and edge[0] not in queue_memory:
                                     queue.append(edge[0])
+                                    queue_memory.add(edge[0])
                             components.append(V_prime)
 
                 if l == 0:
