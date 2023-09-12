@@ -6,6 +6,9 @@ import MDAnalysis as mda
 from MDAnalysis import analysis
 from MDAnalysis.analysis import hbonds
 from MDAnalysis.analysis.hydrogenbonds.hbond_analysis import HydrogenBondAnalysis
+from proteingraph import read_pdb
+import pickle
+
 
 #from IPython.display import display
 #import matplotlib.pyplot as plt
@@ -13,9 +16,55 @@ from MDAnalysis.analysis.hydrogenbonds.hbond_analysis import HydrogenBondAnalysi
 filename = "2eso.pdb"
 path = os.path.join(os.getcwd(),"pdb_samples", filename)
 
+def pdb_to_graph_ver1(path):
+
+
+    # Load the PDB file using Biopandas
+    df = PandasPdb().read_pdb(path)
+
+    # Create a NetworkX graph
+    G = nx.Graph()
+
+    # Iterate over the atoms in the DataFrame
+    for i, row in df.df['ATOM'].iterrows():
+        atom_serial = row['atom_number']
+        atom_element = row['element_symbol']
+
+        # Add nodes to the graph for each atom
+        G.add_node(atom_serial, element=atom_element)
+
+    # Calculate bond distances and add edges to the graph
+    for i, row1 in df.df['ATOM'].iterrows():
+        for j, row2 in df.df['ATOM'].iterrows():
+            if i < j:  # Avoid duplicate pairs
+                atom1_coords = row1[['x_coord', 'y_coord', 'z_coord']]
+                atom2_coords = row2[['x_coord', 'y_coord', 'z_coord']]
+
+                # Calculate the Euclidean distance between atoms
+                distance = ((atom1_coords - atom2_coords) ** 2).sum() ** 0.5
+
+                # Define a threshold for bond distance (adjust as needed)
+                bond_threshold = 1.5
+
+                # Determine bond type based on distance
+                bond_type = 1  # Default to single bond
+                if distance <= bond_threshold:
+                    bond_type = 2  # Double bond
+
+                # Add an edge to the graph if it's a bond
+                if bond_type > 1:
+                    atom1_serial = row1['atom_number']
+                    atom2_serial = row2['atom_number']
+                    G.add_edge(atom1_serial, atom2_serial, bond_type=bond_type)
+
+    return G
 
 
 def pdb_to_graph(path):
+
+    ''' input: PDB-file
+    returns: Graph '''
+
     # Load the PDB file using Biopandas
     df = PandasPdb().read_pdb(path)
 
@@ -26,33 +75,39 @@ def pdb_to_graph(path):
     for i, row in df.df['ATOM'].iterrows():
         atom_serial = row['atom_number']
         atom_element = row['element_symbol']
+        atom_coords = row[['x_coord', 'y_coord', 'z_coord']]
 
         # Add nodes to the graph for each atom
-        G.add_node(atom_serial, element=atom_element, pos=(row['x_coord'], row['y_coord'], row['z_coord']))
+        G.add_node(atom_serial, element=atom_element, coords=atom_coords)
 
-        # Add edges to the graph between adjacent atoms in the residue
-        residue_id = row['residue_number']
-        chain_id = row['chain_id']
+    # Iterate through atoms to identify covalent bonds and add edges to the graph
+    for idx, atom1 in enumerate(G.nodes()):
+        for atom2 in list(G.nodes)[idx+1:-1]:
+            if atom1 != atom2:
+                coords1 = G.nodes[atom1]['coords']
+                coords2 = G.nodes[atom2]['coords']
+                distance = sum((coords1 - coords2) ** 2) ** 0.5
 
-        if i > 0:
-            prev_row = df.df['ATOM'].iloc[i - 1]
-            prev_residue_id = prev_row['residue_number']
-            prev_chain_id = prev_row['chain_id']
+                # Define a threshold for bond length (e.g., for C-C bonds)
+                threshold = 1.54  # Adjust as needed
+                threshold_CN_double = 1.30
 
-            if (residue_id == prev_residue_id) and (chain_id == prev_chain_id):
-                prev_atom_serial = prev_row['atom_number']
+                if 0 < distance < threshold:
+                    G.add_edge(atom1, atom2)
+                if 0 < distance < threshold_CN_double:
+                    G.add_edge(atom1, atom2)
 
-                # Calculate bond type based on interatomic distance
-                distance = ((row['x_coord'] - prev_row['x_coord']) ** 2 +
-                            (row['y_coord'] - prev_row['y_coord']) ** 2 +
-                            (row['z_coord'] - prev_row['z_coord']) ** 2) ** 0.5
 
-                bond_type = 1
-                if distance <= 1.5:  # Adjust this threshold for your specific case
-                    bond_type = 2
 
-                G.add_edge(atom_serial, prev_atom_serial, bond_type)
     return G
+
+def count_doubles(G):
+    counter = 0
+    for i in G.edges:
+        if i[2] == 2:
+            counter += 1
+    return counter
+
 
 def pdb_to_graph_extended(path):
 
@@ -96,6 +151,19 @@ def pdb_to_graph_extended(path):
 
     return G
 
+def dump_graphml(G, filename, targetfolder="graphs"):
+
+    outpath = os.path.join(os.getcwd(), targetfolder, filename+".edgelist")
+    fh = open(outpath, "wb")
+    nx.write_edgelist(G, fh)
+    fh = open(outpath, "rb")
+    graph = nx.read_edgelist(outpath)
+    fh.close()
+    print(graph)
+    outpath = os.path.join(os.getcwd(), targetfolder, filename + ".graphml")
+    nx.write_graphml_lxml(graph, outpath)
+    print(f"created edgelist and graphml with {len(list(graph.nodes))} nodes and {len(list(graph.edges))} edges")
+
 
 
 
@@ -113,22 +181,32 @@ plt.show()
 
 if __name__ == '__main__':
 
-    filename = "2eso.pdb"
+    filename = "2mgo.pdb"  #"alt: 2eso.pdb", "hiv1_homology_model.pdb"
     path = os.path.join(os.getcwd(), "pdb_samples", filename)
+    #testGraph = nx.complete_graph(5)
+    oxy = pdb_to_graph(path)
+    dump_graphml(oxy, "2mgo")
 
-    G = pdb_to_graph(path)
 
-    counter = 0
+
+   # G = pdb_to_graph(path)
+    '''e_K5 = [(1, 2), (1, 3), (1, 4), (1, 5), (2, 3), (2, 4), (2, 5), (3, 4), (3, 5), (4, 5)]
+    G = nx.from_edgelist(e_K5)'''
+
+    '''with open("graphs/outgraph.pickle", 'wb') as pickle_file:
+        pickle.dump(G, pickle_file)'''
+
+    '''counter = 0
     for i in G.edges:
         if i[2] == 2:
-            counter += 1
+            counter += 1'''
 
     #G2 = pdb_to_graph_extended(path)
 
-    print(G.edges()) # irgendwas ist komisch mit dem outputgraphen. es scheint, als ob nicht alle atome als atome miteinander verbunden wurden
-                     # es sieht wie eine große perlenkette aus
-                    # vermutlich verbindet der code von chatGPT nur die nachfolgenden Atome in der PDB-Tabelle, aber man müsste
-                    # alle Abstände berechnen
+    #G = read_pdb(path)
+
+
+    #print(f'Number of Doublebonds:{count_doubles(G)}')
 
 
 
