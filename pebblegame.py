@@ -41,7 +41,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                     to_visit.append((parent, iter(digraph.predecessors(parent))))
             except StopIteration:
                 to_visit.pop(-1)
-        #visited.remove(u)
+        # visited.remove(u)
         return visited
 
     def dfs_reach(digraph: nx.MultiDiGraph, u, v, stop_at_pebble=False):
@@ -121,7 +121,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
     # initiiere n x n matrix aller knoten zur Darstellung bereits vorhandener Komponenten
     len_g_nodes = len(G.nodes)
-    components = np.zeros((len_g_nodes, len_g_nodes))
+    components = np.zeros((len_g_nodes, len_g_nodes), dtype=int)
 
     # iterate in an arbitrary order over all nodes from G
     edges_to_insert = list(G.edges)
@@ -189,10 +189,10 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             # 2a) suche im Reach von u oder v nach einem pebble. Ist eins vorhanden, wird die suche gestoppt und "True" wiedergegeben.
             # Die Component Detection bricht dann ab.
             # -> berechnet nicht zwingend den ganzen reach, sofern nicht erforderlich und spart somit Zeit
-            pebble_in_reach_u = dfs_reach(D, u, v,stop_at_pebble=True)
+            pebble_in_reach_u = dfs_reach(D, u, v, stop_at_pebble=True)
             if pebble_in_reach_u == True:
                 continue
-            pebble_in_reach_v = dfs_reach(D, v, u,stop_at_pebble=True)
+            pebble_in_reach_v = dfs_reach(D, v, u, stop_at_pebble=True)
             if pebble_in_reach_v == True:
                 continue
 
@@ -236,6 +236,17 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                     components[index_j][index_i] = 1
                     components[index_i][index_j] = 1
     print("------------------------------------------------------------------------")
+    print("REMAINING EDGES : ", len(edges_to_insert))
+    print("INSERTED EDGES : ", len(D.edges))
+
+    # fomat matrix
+    header_column = np.array([node for node in D.nodes])
+    components = np.column_stack((header_column, components))
+    header_null = np.array(["-"])
+    header_row = np.hstack((header_null, header_column))
+    print(header_row)
+    components = np.row_stack((header_row, components))
+
     if total_pebbles == l:
         if len(D.edges) == len(G.edges):
             print("well-constraint; l pebbles remain. no edge has been left out")
@@ -275,10 +286,26 @@ if __name__ == "__main__":
     # G_5 = create5Ggraph(G)
     # pebblegame(G_5, 5, 6)
 
-    '''other-Beispiel but definetely with rigid components:'''
-    full_graph_octaeder_and_additional_limb = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6),
-                                               (3, 4), (3, 5), (3, 6), (4, 5),
-                                               (4, 6), (5, 6), (6, 7)]
-    G = nx.from_edgelist(full_graph_octaeder_and_additional_limb)
-    G_5 = create5Ggraph(G)
-    pebblegame(G_5, 5, 6)
+    # '''other-Beispiel but definetely with rigid components:'''
+    # full_graph_octaeder_and_additional_limb = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6),
+    #                                            (3, 4), (3, 5), (3, 6), (4, 5),
+    #                                            (4, 6), (5, 6), (6, 7)]
+    # G = nx.from_edgelist(full_graph_octaeder_and_additional_limb)
+    # G_5 = create5Ggraph(G)
+    # pebblegame(G_5, 5, 6)
+
+    # '''Moser spindle (Laman-Graph mit 7 Knoten; für 2,3 Pebble Game'''
+    # laman7 = [("A", "B"), ("A", "C"), ("B", "C"), ("C", "D"), ("B", "D"), ("D", "E"), ("D", "F"), ("E", "F"),
+    #           ("E", "G"), ("F", "G"),
+    #           ("G", "A")]
+    # well_constraint = nx.from_edgelist(laman7)
+
+    '''Moser spindle 3D (3D  Hajós construction; für 5,6 Pebble Game'''
+    '''2 Steife Komponenten im Graph enthalten; die um AD oder DG sich drehen können'''
+    hajos_edges = [("A", "B"), ("A", "C"), ("B", "C"), ("A", "D"), ("C", "D"), ("B", "D"), ("D", "F"), ("D", "G"), (
+    "F", "G"),
+               ("F", "E"), ("G", "E"), ("E", "A"), ("E", "D")]
+
+    hajos_graph = nx.from_edgelist(hajos_edges)
+    hajos5G = create5Ggraph(hajos_graph)
+    pebblegame(hajos5G, 5, 6)
