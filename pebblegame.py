@@ -10,7 +10,6 @@ def create5Ggraph(multigraph1G):
     for edge in multigraph1G.edges:
         for i in range(0, 5):
             listofedges.append((edge[0], edge[1]))
-
     # append all edges from edge list to a new 5G Graph (not mattering about too many edges)
     # to achieve an edge list with (x,x,x) tuples
     multigraph5G = nx.MultiGraph(listofedges)

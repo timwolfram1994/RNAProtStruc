@@ -16,50 +16,6 @@ import pickle
 filename = "2eso.pdb"
 path = os.path.join(os.getcwd(),"pdb_samples", filename)
 
-def pdb_to_graph_ver1(path):
-
-
-    # Load the PDB file using Biopandas
-    df = PandasPdb().read_pdb(path)
-
-    # Create a NetworkX graph
-    G = nx.Graph()
-
-    # Iterate over the atoms in the DataFrame
-    for i, row in df.df['ATOM'].iterrows():
-        atom_serial = row['atom_number']
-        atom_element = row['element_symbol']
-
-        # Add nodes to the graph for each atom
-        G.add_node(atom_serial, element=atom_element)
-
-    # Calculate bond distances and add edges to the graph
-    for i, row1 in df.df['ATOM'].iterrows():
-        for j, row2 in df.df['ATOM'].iterrows():
-            if i < j:  # Avoid duplicate pairs
-                atom1_coords = row1[['x_coord', 'y_coord', 'z_coord']]
-                atom2_coords = row2[['x_coord', 'y_coord', 'z_coord']]
-
-                # Calculate the Euclidean distance between atoms
-                distance = ((atom1_coords - atom2_coords) ** 2).sum() ** 0.5
-
-                # Define a threshold for bond distance (adjust as needed)
-                bond_threshold = 1.5
-
-                # Determine bond type based on distance
-                bond_type = 1  # Default to single bond
-                if distance <= bond_threshold:
-                    bond_type = 2  # Double bond
-
-                # Add an edge to the graph if it's a bond
-                if bond_type > 1:
-                    atom1_serial = row1['atom_number']
-                    atom2_serial = row2['atom_number']
-                    G.add_edge(atom1_serial, atom2_serial, bond_type=bond_type)
-
-    return G
-
-
 def pdb_to_graph(path):
 
     ''' input: PDB-file
@@ -89,15 +45,13 @@ def pdb_to_graph(path):
                 distance = sum((coords1 - coords2) ** 2) ** 0.5
 
                 # Define a threshold for bond length (e.g., for C-C bonds)
-                threshold = 1.54  # Adjust as needed
+                threshold = 1.54  # Adjust as needed 1.54 suggested by chatgpt, 6.0 from kaggle challenge
                 threshold_CN_double = 1.30
 
                 if 0 < distance < threshold:
                     G.add_edge(atom1, atom2)
                 if 0 < distance < threshold_CN_double:
                     G.add_edge(atom1, atom2)
-
-
 
     return G
 
@@ -185,7 +139,7 @@ if __name__ == '__main__':
     path = os.path.join(os.getcwd(), "pdb_samples", filename)
     #testGraph = nx.complete_graph(5)
     oxy = pdb_to_graph(path)
-    dump_graphml(oxy, "2mgo")
+    dump_graphml(oxy, "2mgo_dist2")
 
 
 

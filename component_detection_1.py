@@ -103,7 +103,7 @@ def pebblegame(G, k, l):
                 if D.nodes[u]['pebbles'] < k: # vertices must not have more than k pebbles. so we don't do a dfs if we have already 5
                     dfs_find_pebble(D, u, v)
 
-                if D.nodes[v]['pebbles'] < k:  # vertices must not have more than k pebbles. so we don't do a dfs if we have already 5?
+                if D.nodes[v]['pebbles'] < k: # vertices must not have more than k pebbles. so we don't do a dfs if we have already 5?
                     dfs_find_pebble(D, v, u)  # v will now be handled as u
 
                 compare2 = D.nodes[u]['pebbles'] + D.nodes[v][
@@ -337,7 +337,7 @@ if __name__ == '__main__':
     #print(f'Graph b) should be under-constraint. Here it is {pebblegame(G_b, 3, 3)}')
     print(component_detection_1(G_a, 3, 3))
 
-    print(f'G_a reference edgelist:{ [(1,2),(2,4),(2,4),(3,1),(3,1),(3,4),(4,3),(4,3),(4,1),(5,1),(5,1),(5,3),(6,3),(6,3),(6,3)]}')
+    print(f'G_a reference edgelist:{[(1,2),(2,4),(2,4),(3,1),(3,1),(3,4),(4,3),(4,3),(4,1),(5,1),(5,1),(5,3),(6,3),(6,3),(6,3)]}')
 
 
 '''reach_uv += [edge[0], edge[1]]
