@@ -5,10 +5,12 @@ import os
 import pickle
 import matplotlib.pyplot as plt
 import json
+import pandas as pd
+import numpy as np
+
 
 '''Protokoll: 
-04.09. Component-Detection von Alex ergibt ebenfalls andere Komponenten nach jedem Durchlauf
-To-Do: component detection debuggen, Testgraphen erstellen, PDB-to-graph debuggen
+To-Do: component detection 1 debuggen, Testgraphen erstellen, PDB-to-graph debuggen, 
 
 '''
 
@@ -56,7 +58,12 @@ oxy = nx.read_edgelist("graphs/2mgo.edgelist")
 print(oxy)
 oxy = pg.create5Ggraph(oxy)
 print(oxy)
-#pg.pebblegame(oxy, 5, 6)
+#comp_mat = pg.pebblegame(oxy, 5, 6)
+
+fh = open('graphs/test_2octa.edgelist', 'rb')
+G = nx.read_edgelist(fh)
+G = pg.create5Ggraph(G)
+comp_mat = pg.pebblegame(G, 5, 6)
 
 
 
@@ -104,19 +111,34 @@ for i in range(5):
 center_nodes = [5, 11, 17, 23, 29]
 G.add_edges_from([(center_nodes[i], center_nodes[(i + 1) % 5]) for i in range(5)])
 G.remove_edge(5,29)
-G.remove_edge(17,23)
+#G.remove_edge()
 
-
-G = pg.create5Ggraph(G)
-pg.pebblegame(G, 5, 6)
 
 # Draw the graph
-pos = nx.spring_layout(G, seed=42)  # Layout for visualization
+'''pos = nx.spring_layout(G, seed=42)  # Layout for visualization
 nx.draw(G, pos, with_labels=True, node_size=300, node_color="skyblue", font_size=8, font_color="black", font_weight="bold", width=2)
 plt.axis("off")
-plt.show()
+plt.show()'''
+
+#perform component detection
+
+'''G = pg.create5Ggraph(G)
+comp_mat = pg.pebblegame(G, 5, 6)'''
 
 
+data_matrix = comp_mat[1:, 1:]
+
+# Check which columns have at least one element not equal to 0
+non_zero_columns = np.any(data_matrix != 0, axis=0)
+
+# Count the number of columns with at least one non-zero element
+count_non_zero_columns = np.sum(non_zero_columns)
+
+print("Number of nodes in rigid Components:", count_non_zero_columns)
+
+
+#df = pd.DataFrame(comp_mat)
+#df.to_csv('matrices/test_5octa.csv', index=False)
 
 
 

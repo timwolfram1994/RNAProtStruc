@@ -1,5 +1,6 @@
 import networkx as nx
 import itertools
+import numpy as np
 
 
 def pairwise(iterable):
@@ -39,6 +40,15 @@ def directed_dfs_edges(G, source=None, depth_limit=None):
                         stack.append((child, depth_now - 1, iter(G.successors(child))))  # Only successors of the child
             except StopIteration:
                 stack.pop()
+
+def count_components(matrix):
+
+    data_matrix = matrix[1:, 1:]
+    # Check which columns have at least one element not equal to 0
+    non_zero_columns = np.any(data_matrix != 0, axis=0)
+    # Count the number of columns with at least one non-zero element
+    count_non_zero_columns = np.sum(non_zero_columns)
+    print("Number of nodes in rigid Components:", count_non_zero_columns)
 
 
 if __name__ == '__main__':

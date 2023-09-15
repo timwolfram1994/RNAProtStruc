@@ -260,6 +260,8 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         print("error!", total_pebbles, "pebbles remain")
     print("Matrix steifer Komponenten: \n", components)
 
+    return components
+
 
 if __name__ == "__main__":
     '''well-constraint-Beispiel:'''
