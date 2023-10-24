@@ -26,10 +26,10 @@ for i in range(4):
     G.add_edge(path_nodes[i], path_nodes[i + 1])
 
 # Draw the graph (optional)
-'''pos = nx.spring_layout(G, seed=42)  # Layout for visualization
+pos = nx.spring_layout(G, seed=42)  # Layout for visualization
 nx.draw(G, pos, with_labels=True, node_size=300, node_color="skyblue", font_size=8, font_color="black", font_weight="bold", width=2)
 plt.axis("off")
-plt.show()'''
+plt.show()
 
 # create edgelist
 

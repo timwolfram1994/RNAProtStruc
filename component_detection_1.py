@@ -174,8 +174,10 @@ def component_detection_1(G, k, l):
 
                     if D.nodes[u][
                         'pebbles'] < k:  # vertices must not have more than k pebbles. so we don't do a dfs if we have already 5
-                        dfs_find_pebble(D, u, v)
+                        dfs_u = dfs_find_pebble(D, u, v)
 
+                    if dfs_u:
+                        continue
                     if D.nodes[v][
                         'pebbles'] < k:  # vertices must not have more than k pebbles. so we don't do a dfs if we have already 5?
                         dfs_find_pebble(D, v, u)  # v will now be handled as u
