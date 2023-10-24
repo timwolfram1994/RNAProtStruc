@@ -60,8 +60,8 @@ def show_components(path):
     print(G1)
     G = pg.create5Ggraph(G1)
     comp = pg.pebblegame(G, 5, 6)
-    for node in G.nodes:
-        G.nodes[node]['component'] = 0
+    for node in G1.nodes:
+        G1.nodes[node]['component'] = 0
     for node in G1.nodes:
         for c in comp:
             if len(c) > 2:
@@ -79,6 +79,7 @@ def show_components(path):
         node_size_multiplier=1
     )
     p.show()
+    return G1
 
 
 
@@ -88,5 +89,8 @@ if __name__ == "__main__":
     path = "pdb_samples/2mgo.pdb"
     #G = load_and_show(path)
     #load_and_pebble(path)
-    show_components(path)
+    G = show_components(path)
+    for node in G.nodes():
+        attributes = G.nodes[node]
+        print(f"Node {node} attributes: {attributes}")
 
