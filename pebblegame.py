@@ -242,8 +242,8 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     print("REMAINING EDGES : ", len(edges_to_insert))
     print("INSERTED EDGES : ", len(D.edges))
 
-    nx.draw(D, with_labels=True)
-    plt.show()
+    #nx.draw(D, with_labels=True)
+    #plt.show()
 
     print("identified components: ", identified_components)
     # fomat matrix

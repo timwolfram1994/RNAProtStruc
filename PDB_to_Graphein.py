@@ -66,30 +66,42 @@ def show_components(path):
 
     params_to_change = {"granularity": "atom", "edge_construction_functions": [add_atomic_edges]}
     config = ProteinGraphConfig(**params_to_change)
-    G1 = construct_graph(config=config, path=path)
-    print(G1)
-    G = pg.create5Ggraph(G1)
-    comp = pg.pebblegame(G, 5, 6)
-    for node in G1.nodes:
-        G1.nodes[node]['component'] = 0
-    for node in G1.nodes:
-        for c in comp:
-            if len(c) > 2:
+    G = construct_graph(config=config, path=path)
+
+    G5 = pg.create5Ggraph(G)
+    comp = pg.pebblegame(G5, 5, 6)
+
+    counter = 0
+    for edge in G.edges:
+        G[edge[0]][edge[1]]['component'] = 0
+        for comp in components_list:
+            if edge in comp and len(comp) > 1: # we assign the edge to the next component if we find it in a bigger one
+                counter += 1
+                G[edge[0]][edge[1]]['component'] = counter
+
+
+    for node in G.nodes:
+        G.nodes[node]['component'] = 0
+    for node in G.nodes:
+        for c in components_list:
+            if len(c) > 1:
                 for e in c:
                     if node in e:
-                        G1.nodes[node]['component'] = 1
+                        G.nodes[node]['component'] = 1
                         break
 
+
+
     p = plotly_protein_structure_graph(
-        G1,
-        colour_edges_by="kind",
+        G,
+        colour_edges_by="component",
         colour_nodes_by="component",
         label_node_ids=False,
         plot_title="Peptide backbone graph. Nodes coloured by degree.",
         node_size_multiplier=1
     )
     p.show()
-    return G1
+    return G
 
 
 
@@ -99,6 +111,11 @@ if __name__ == "__main__":
     path = "pdb_samples/2mgo.pdb"
     #G = load_and_show(path)
     #load_and_pebble(path)
-    #G = show_components(path)
+    G = show_components(path)
+
+    # Print node attributes
+    for node in G.nodes():
+        attributes = G.nodes[node]
+        print(f"Node {node} attributes: {attributes}")
 
 
