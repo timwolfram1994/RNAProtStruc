@@ -18,7 +18,14 @@ params_to_change = {"granularity": "atom"}
 #oxy = pg.create5Ggraph(oxy)
 #pg.pebblegame(oxy,5,6)
 
+def pdb_to_graph(path):
 
+    '''uses graphein to convert PDB-file to Graph'''
+    params_to_change = {"granularity": "atom", "edge_construction_functions": [add_atomic_edges]}
+    config = ProteinGraphConfig(**params_to_change)
+    G = construct_graph(config=config, path=path)
+
+    return G
 
 
 
@@ -49,9 +56,12 @@ def load_and_pebble(path):
     G = construct_graph(config=config, path=path)
     print(G)
     G = pg.create5Ggraph(G)
-    comp = pg.pebblegame(G,5,6)
+    component_list = pg.pebblegame(G,5,6)
+    return component_list
 
 def show_components(path):
+
+    components_list = load_and_pebble(path)
 
 
     params_to_change = {"granularity": "atom", "edge_construction_functions": [add_atomic_edges]}
@@ -89,8 +99,6 @@ if __name__ == "__main__":
     path = "pdb_samples/2mgo.pdb"
     #G = load_and_show(path)
     #load_and_pebble(path)
-    G = show_components(path)
-    for node in G.nodes():
-        attributes = G.nodes[node]
-        print(f"Node {node} attributes: {attributes}")
+    #G = show_components(path)
+
 
