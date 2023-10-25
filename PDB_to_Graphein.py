@@ -22,7 +22,7 @@ params_to_change = {"granularity": "atom"}
 def pdb_to_graph(path):
 
     '''uses graphein to convert PDB-file to Graph'''
-    params_to_change = {"granularity": "atom", "edge_construction_functions": [add_atomic_edges]}
+    params_to_change = {"edge_construction_functions": [add_atomic_edges]}
     config = ProteinGraphConfig(**params_to_change)
     G = construct_graph(config=config, path=path)
 
