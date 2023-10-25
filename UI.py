@@ -14,11 +14,16 @@ command = input('>')
 if command == 'e':
     print('please type path of your graph:')
     path = input()
+    print('A k,l-pebble game will be run. Specifiy k:')
+    k = int(input())
+    print('Now please specify l:')
+    l = int(input())
+
 
     fh = open(path, 'rb')
     G = nx.read_edgelist(fh)
     G = pg.create5Ggraph(G)
-    comp_mat = pg.pebblegame(G, 5, 6)
+    comp_mat = pg.pebblegame(G, k, l)
     hp.count_components(comp_mat)
 
 

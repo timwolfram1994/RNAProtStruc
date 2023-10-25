@@ -54,7 +54,7 @@ print(eso)
 #pg.pebblegame(eso, 5, 6) # takes forever
 
 fh = open("graphs/2mgo.edgelist", "rb")
-oxy = nx.read_edgelist("graphs/2mgo.edgelist")
+oxy = nx.read_edgelist(fh)
 print(oxy)
 oxy = pg.create5Ggraph(oxy)
 print(oxy)
