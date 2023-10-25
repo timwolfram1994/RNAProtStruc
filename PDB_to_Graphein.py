@@ -1,4 +1,5 @@
 import graphein
+import pandas as pd
 import networkx as nx
 import pebblegame as pg
 from graphein.protein.visualisation import plotly_protein_structure_graph
@@ -103,6 +104,42 @@ def show_components(path):
     p.show()
     return G
 
+def assign_components(path):
+    components_list = load_and_pebble(path)
+
+    params_to_change = {"granularity": "atom", "edge_construction_functions": [add_atomic_edges]}
+    config = ProteinGraphConfig(**params_to_change)
+    G = construct_graph(config=config, path=path)
+
+    G5 = pg.create5Ggraph(G)
+    comp = pg.pebblegame(G5, 5, 6)
+
+    counter = 0
+    for edge in G.edges:
+        G[edge[0]][edge[1]]['component'] = 0
+        for comp in components_list:
+            if edge in comp and len(comp) > 1:  # we assign the edge to the next component if we find it in a bigger one
+                counter += 1
+                G[edge[0]][edge[1]]['component'] = counter
+    for node in G.nodes():
+        G.nodes[node]['component'] = 0
+    for edge in G.edges:
+        if G[edge[0]][edge[1]]['component'] > 0:
+            G.nodes[edge[0]]['component'] = G[edge[0]][edge[1]]['component']
+            G.nodes[edge[1]]['component'] = G[edge[0]][edge[1]]['component']
+
+
+    return G
+
+def print_attributes(G):
+
+    # Get the node attributes as a dictionary
+    node_attributes = dict(G.nodes(data=True))
+
+    # Convert the dictionary to a Pandas DataFrame
+    df = pd.DataFrame.from_dict(node_attributes, orient='index')
+    return df
+
 
 
 
@@ -111,11 +148,14 @@ if __name__ == "__main__":
     path = "pdb_samples/2mgo.pdb"
     #G = load_and_show(path)
     #load_and_pebble(path)
-    G = show_components(path)
+    #G = show_components(path)
+    G = assign_components(path)
+    df = print_attributes(G)
+    df.to_csv('node_attributes/2mgo_attributes.csv', index=False)
 
     # Print node attributes
-    for node in G.nodes():
+    '''for node in G.nodes():
         attributes = G.nodes[node]
-        print(f"Node {node} attributes: {attributes}")
+        print(f"Node {node} attributes: {attributes}")'''
 
 
