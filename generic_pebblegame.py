@@ -25,7 +25,7 @@ def create5Ggraph(multigraph1G):
     return multigraph5G
 
 
-def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
+def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     def dfs_find_pebble(digraph: nx.MultiDiGraph, u, v):
     # A function for a DFS, that stops immediately after a pebble is found on a node
     # to avoid unnessessary computational resources.
@@ -152,14 +152,14 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         if len(D.edges) == len(G.edges):
             print("well-constraint; l pebbles remain. no edge has been left out")
         else:
-            print("over-constraint; l pebbles remain. ,", len(G.edges) - len(D.edges), "have been left out")
+            print("over-constraint; l pebbles remain.", len(G.edges) - len(D.edges), "edges have been left out")
     elif total_pebbles > l:
         if len(D.edges) == len(G.edges):
             print("under-constraint; ", total_pebbles, "pebbles remain. no edge has been left out")
         else:
             print("other: ", total_pebbles, "pebbles remain,", len(G.edges) - len(D.edges), "edges have been left out")
     else:
-        print("error!", total_pebbles, "pebbles remain")
+        print("error! This is result is not supposed to appear...", total_pebbles, "pebbles remain")
 
 
 if __name__ == "__main__":
@@ -211,32 +211,32 @@ if __name__ == "__main__":
     # hajos5G = create5Ggraph(hajos_graph)
     # pebblegame(hajos5G, 5, 6)
 
-    # '''Moser spindle (Laman-Graph mit 7 Knoten; für 2,3 Pebble Game'''
-    # laman7 = [("A", "B"), ("A", "C"), ("B", "C"), ("C", "D"), ("B", "D"), ("D", "E"), ("D", "F"), ("E", "F"),
-    #           ("E", "G"), ("F", "G"),
-    #           ("G", "A")]
-    # well_constraint = nx.from_edgelist(laman7)
-    # pebblegame(well_constraint, 2, 3)
+    '''Moser spindle (Laman-Graph mit 7 Knoten; für 2,3 Pebble Game'''
+    laman7 = [("A", "B"), ("A", "C"), ("B", "C"), ("C", "D"), ("B", "D"), ("D", "E"), ("D", "F"), ("E", "F"),
+              ("E", "G"), ("F", "G"),
+              ("G", "A")]
+    well_constraint = nx.from_edgelist(laman7)
+    generic_pebblegame(well_constraint, 2, 3)
 
     # overconstrant_1 = [(0, 1), (0, 8), (0, 9), (0, 11), (1, 7), (1, 8), (1, 10), (1, 11), (1, 13), (2, 3), (2, 7),
     #                    (2, 8), (2, 14), (3, 6), (3, 14), (4, 5), (4, 8), (4, 9), (4, 11), (4, 12), (5, 6), (5, 7),
     #                    (5, 9), (5, 12), (5, 13), (6, 13), (6, 14), (7, 12), (7, 14), (8, 12), (8, 13), (8, 14), (9, 10),
     #                    (9, 12), (10, 11)]
     # over = nx.from_edgelist(overconstrant_1)
-    # pebblegame(over, 2, 3)
+    # generic_pebblegame(over, 2, 3)
     # #
     # underconstraint = [(0, 6), (0, 11), (0, 12), (0, 14), (1, 6), (1, 7), (1, 8), (1, 9), (2, 12), (3, 6), (3, 7),
     #                    (3, 10), (4, 5), (4, 7), (4, 12), (4, 14), (5, 8), (7, 11), (7, 13), (9, 10), (9, 11), (9, 13),
     #                    (10, 12), (12, 14), (13, 14)]
     #
     # under = nx.from_edgelist(underconstraint)
-    # pebblegame(under, 2, 3)
+    # generic_pebblegame(under, 2, 3)
 
-    other_0 = [(0, 4), (0, 6), (0, 11), (0, 13), (1, 4), (1, 5), (1, 9), (1, 10), (1, 11), (1, 12), (1, 13), (2, 3),
-               (3, 5), (3, 7), (3, 13), (4, 5), (4, 8), (4, 11), (5, 9), (5, 10), (5, 13), (6, 10), (6, 11), (6, 14),
-               (7, 8), (7, 10), (7, 14), (8, 9), (8, 11), (9, 12), (11, 13), (12, 13)]
-    other = nx.from_edgelist(other_0)
-    pebblegame(other, 2, 3)
+    # other_0 = [(0, 4), (0, 6), (0, 11), (0, 13), (1, 4), (1, 5), (1, 9), (1, 10), (1, 11), (1, 12), (1, 13), (2, 3),
+    #            (3, 5), (3, 7), (3, 13), (4, 5), (4, 8), (4, 11), (5, 9), (5, 10), (5, 13), (6, 10), (6, 11), (6, 14),
+    #            (7, 8), (7, 10), (7, 14), (8, 9), (8, 11), (9, 12), (11, 13), (12, 13)]
+    # other = nx.from_edgelist(other_0)
+    # generic_pebblegame(other, 2, 3)
 
     # path = "graphs/test_2octa.edgelist"
     # open(path, "rb")
