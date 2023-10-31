@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
-
+import test_samples
 
 def create5Ggraph(multigraph1G):
     # create an edge list for the 5G Graph
@@ -260,7 +260,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         if len(D.edges) == len(G.edges):
             print("well-constraint; l pebbles remain. no edge has been left out")
         else:
-            print("over-constraint; l pebbles remain. ,", len(G.edges) - len(D.edges), "have been left out")
+            print("over-constraint; l pebbles remain. ,", len(G.edges) - len(D.edges), "edges have been left out")
     elif total_pebbles > l:
         if len(D.edges) == len(G.edges):
             print("under-constraint; ", total_pebbles, "pebbles remain. no edge has been left out")
@@ -271,86 +271,9 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     print("Matrix steifer Komponenten: \n", component_matrix)
 
 if __name__ == "__main__":
-    '''well-constraint-Beispiel:'''
-    # figure_3a = [("A", "B"), ("A", "C"), ("A", "C"), ("A", "D"), ("A", "E"), ("A", "E"), ("B", "D"), ("B", "D"),
-    #              ("C", "D"),
-    #              ("C", "D"), ("C", "D"),
-    #              ("C", "E"), ("C", "F"), ("C", "F"), ("C", "F")]
-    # well_constraint = nx.MultiDiGraph(figure_3a)
-    # pebblegame(well_constraint, 3, 3)
 
-    '''under-constraint-Beispiel:'''
-    # figure_3b = [("A", "B"), ("A", "C"), ("A", "C"), ("A", "D"), ("A", "E"), ("A", "E"), ("B", "D"), ("B", "D"),
-    #              ("C", "D"), ("C", "D"), ("C", "D"),
-    #              ("C", "E"), ("C", "F"), ("C", "F",)]
-    # under_constraint = nx.MultiDiGraph(figure_3b)
-    # pebblegame(under_constraint, 3, 3)
+    pebblegame(test_samples.sample10_graph,2,3)
 
-    # '''over-constraint-Beispiel:'''
-    # full_graph_octaeder = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6), (3, 4), (3, 5),
-    #                        (3, 6), (4, 5),
-    #                        (4, 6), (5, 6)]
-    # G = nx.from_edgelist(full_graph_octaeder)
-    # G_5 = create5Ggraph(G)
-    # pebblegame(G_5, 5, 6)
-
-    # '''other-Beispiel but definetely with rigid components:'''
-    # full_graph_octaeder_and_additional_limb = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6),
-    #                                            (3, 4), (3, 5), (3, 6), (4, 5),
-    #                                            (4, 6), (5, 6), (6, 7)]
-    # G = nx.from_edgelist(full_graph_octaeder_and_additional_limb)
-    # G_5 = create5Ggraph(G)
-    # pebblegame(G_5, 5, 6)
-
-    # '''Moser spindle (Laman-Graph mit 7 Knoten; für 2,3 Pebble Game'''
-    # laman7 = [("A", "B"), ("A", "C"), ("B", "C"), ("C", "D"), ("B", "D"), ("D", "E"), ("D", "F"), ("E", "F"),
-    #           ("E", "G"), ("F", "G"),
-    #           ("G", "A")]
-    # well_constraint = nx.from_edgelist(laman7)
-    # pebblegame(well_constraint, 2, 3)
-
-    # '''Moser spindle 3D (3D  Hajós construction; für 5,6 Pebble Game'''
-    # '''2 Steife Komponenten im Graph enthalten; die um AD oder DG sich drehen können'''
-    # hajos_edges = [("A", "B"), ("A", "C"), ("B", "C"),("C", "D"), ("B", "D"), ("E", "F"), ("D", "F"),
-    #                ("D", "G"), (
-    #                    "F", "G"), ("E", "A"), ("G", "E")]
-    #
-    # hajos_graph = nx.from_edgelist(hajos_edges)
-    # hajos5G = create5Ggraph(hajos_graph)
-    # pebblegame(hajos5G, 5, 6)
-
-    # '''Moser spindle (Laman-Graph mit 7 Knoten; für 2,3 Pebble Game'''
-    # laman7 = [("A", "B"), ("A", "C"), ("B", "C"), ("C", "D"), ("B", "D"), ("D", "E"), ("D", "F"), ("E", "F"),
-    #           ("E", "G"), ("F", "G"),
-    #           ("G", "A")]
-    # well_constraint = nx.from_edgelist(laman7)
-    # pebblegame(well_constraint, 2, 3)
-
-    # overconstrant_1 = [(0, 1), (0, 8), (0, 9), (0, 11), (1, 7), (1, 8), (1, 10), (1, 11), (1, 13), (2, 3), (2, 7),
-    #                    (2, 8), (2, 14), (3, 6), (3, 14), (4, 5), (4, 8), (4, 9), (4, 11), (4, 12), (5, 6), (5, 7),
-    #                    (5, 9), (5, 12), (5, 13), (6, 13), (6, 14), (7, 12), (7, 14), (8, 12), (8, 13), (8, 14), (9, 10),
-    #                    (9, 12), (10, 11)]
-    # over = nx.from_edgelist(overconstrant_1)
-    # pebblegame(over, 2, 3)
-    # #
-    # underconstraint = [(0, 6), (0, 11), (0, 12), (0, 14), (1, 6), (1, 7), (1, 8), (1, 9), (2, 12), (3, 6), (3, 7),
-    #                    (3, 10), (4, 5), (4, 7), (4, 12), (4, 14), (5, 8), (7, 11), (7, 13), (9, 10), (9, 11), (9, 13),
-    #                    (10, 12), (12, 14), (13, 14)]
-    #
-    # under = nx.from_edgelist(underconstraint)
-    # pebblegame(under, 2, 3)
-
-    other_0 = [(0, 4), (0, 6), (0, 11), (0, 13), (1, 4), (1, 5), (1, 9), (1, 10), (1, 11), (1, 12), (1, 13), (2, 3),
-               (3, 5), (3, 7), (3, 13), (4, 5), (4, 8), (4, 11), (5, 9), (5, 10), (5, 13), (6, 10), (6, 11), (6, 14),
-               (7, 8), (7, 10), (7, 14), (8, 9), (8, 11), (9, 12), (11, 13), (12, 13)]
-    other = nx.from_edgelist(other_0)
-    pebblegame(other, 2, 3)
-
-    # path = "graphs/test_2octa.edgelist"
-    # open(path, "rb")
-    # test2_octa = nx.read_edgelist(path)
-    # test2_octa_5G = create5Ggraph(test2_octa)
-    # pebblegame(test2_octa_5G, 5, 6)
 
 '''zusätzliches pebble_game für l<k, wobei selbstreflexive Kanten erlaubt sind. hierbei sind Komponenten auch Knotendisjunkt. 
 Ein Knoten existiert nur in einer Komponente. Eine Komponente, kann dabei eine andere Komponente schlucken'''
