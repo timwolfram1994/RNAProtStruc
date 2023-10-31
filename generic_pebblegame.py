@@ -1,11 +1,11 @@
 import random
-import matplotlib.pyplot as plt
 import networkx as nx
-import numpy as np
-import pandas as pd
+import test_samples
 
 
 def create5Ggraph(multigraph1G):
+    """based on molecular conjuncture, this function converts a (multigraph) into a 5G-Graph
+     for pebble game application with a G^2 graph"""
     # create an edge list for the 5G Graph
     listofedges = []
     for edge in multigraph1G.edges:
@@ -18,7 +18,7 @@ def create5Ggraph(multigraph1G):
     for tuple in multigraph5G.edges:
         listofedges.append(tuple)
 
-    # create a sober edge list and the correct 5G Graph
+    # create a sober edge list and the correct 5G Graph by only including the maximum 6 edges between two nodes
     edgelist5G = [x for x in listofedges if x[2] < 6]
     multigraph5G = nx.MultiGraph(edgelist5G)
 
@@ -27,15 +27,16 @@ def create5Ggraph(multigraph1G):
 
 def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     def dfs_find_pebble(digraph: nx.MultiDiGraph, u, v):
-    # A function for a DFS, that stops immediately after a pebble is found on a node
-    # to avoid unnessessary computational resources.
-    # it returns the boolean true, if a pebble has been found and the whole reach of u,v otherwise.
+        """A function for a DFS, that stops immediately after a pebble is found on a node
+        # to avoid unnessessary computational resources. It returns the boolean true,
+        if a pebble has been found and the whole reach of u,v otherwise."""
 
         # Initiation of the lists for visited notes (visited) and the
         # backlog of nodes to visit (to_visit)
         visited = []
         visited.append((u, v))
         to_visit = [(u, iter(digraph.successors(u)))]
+        # To do until the list of to-visit-nodes and all of its successors have been traversed
         while to_visit:
             parent, childen = to_visit[-1]
             try:
@@ -51,10 +52,10 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                     if D.nodes[child]["pebbles"] != 0:
                         D.nodes[child]["pebbles"] -= 1
                         D.nodes[u]["pebbles"] += 1
-                        # Pfade umdrehen, damit der Pfad von hinten nach vorn effizienter durchgegangen wird
+                        # Reverse path, to walk the path in a more efficient way from its end to its start
                         visited.reverse()
                         visited.pop(
-                            -1)  # entferne den knoten v, da dieser nicht zum Pfad gehört, sondern nur zur Abgrenzung des Reaches diente
+                            -1)  # Reverse node v, since it was only used for seggregation
                         for edge in visited:
                             if edge[1] == child:
                                 D.remove_edge(edge[0], edge[1])
@@ -68,8 +69,8 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                 to_visit.pop(-1)
         return visited
 
-    # Definitions and initiations of datastructures, notated accordingly to "Pebble game algorithms and sparse graphs"
-    # by Audrey Lee and Ileana Streinu as appeared in Discrete Mathematics 308 (2008) 1425-1437)
+    '''Definitions and initiations of datastructures, notated accordingly to "Pebble game algorithms and sparse graphs"
+    by Audrey Lee and Ileana Streinu as appeared in Discrete Mathematics 308 (2008) 1425-1437)'''
 
     # initiate directed pebble graph D with k pebbles and zero edges
     G = multiDiGraph
@@ -89,21 +90,21 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         # wähle eine zufällige Kante aus Edges_to_insert aus, über den Index der Liste einzufügender Kanten
         e = edges_to_insert.pop(-1)
 
-        # definiere die Knoten u und v aus der einzusetzenden Kante
+        # Define u,v out of the edge to be inserted
         u = e[0]
         v = e[1]
         print("edge to insert: ", u, v)
 
-        # Check if the edge is a loop (u == v): if so, continue with next edge
+        '''though there might be cases for the generic pebblegame to tread special cases of loops 
+        (i.e. edge(u,v)| u = v) we hereby decide to leave this control structure out, 
+        since there is no application herefore on molecule graphs with a 5,6 pebble game.'''
 
-        if k <= l and u == v:
-            continue
-        # though there might be cases for the generic pebblegame to tread special cases of loops (i.e. edge(u,
-        # v)| u = v) we hereby decide to leave this control structure out, since there is no application herefore on
-        # molecule graphs with a 5,6 pebble game.
+#           Check if the edge is a loop (u == v): if so, continue with next edge
+#           if k <= l and u == v:
+#               continue
 
         # edge acceptance: gather information on amount of pebbles and apply the DFS for pebble search,
-        # if the sufficient amount of pebbles is not callable
+        # if the sufficient amount of pebbles is not callable yet
 
         peb_u = D.nodes[u]["pebbles"]
         peb_v = D.nodes[v]["pebbles"]
@@ -111,10 +112,10 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         # initiate pebble-collection
         while peb_u + peb_v < (l + 1):
 
-            # the variables dfs_u and dfs_v are initially set to True. If a dfs-pebble search fails
-            # or if there are already k pebbles on u or v, the referring variable will be set to False
-            # if both variables remain false (i.e. DFS failed or not allowed at the node) at the end of the one round
-            # collecting pebbles for u and v, the collecting process ends.
+            '''the variables dfs_u and dfs_v are initially set to True. If a dfs-pebble search fails
+            or if there are already k pebbles on u or v, the referring variable will be set to False
+            if both variables remain false (i.e. DFS failed or not allowed at the node) at the end of 
+            the one round collecting pebbles for u and v, the collecting process ends.'''
 
             dfs_u = True
             if peb_u == k:
@@ -147,7 +148,6 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
         continue
 
-
     if total_pebbles == l:
         if len(D.edges) == len(G.edges):
             print("well-constraint; l pebbles remain. no edge has been left out")
@@ -163,91 +163,5 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
 
 if __name__ == "__main__":
-    '''well-constraint-Beispiel:'''
-    # figure_3a = [("A", "B"), ("A", "C"), ("A", "C"), ("A", "D"), ("A", "E"), ("A", "E"), ("B", "D"), ("B", "D"),
-    #              ("C", "D"),
-    #              ("C", "D"), ("C", "D"),
-    #              ("C", "E"), ("C", "F"), ("C", "F"), ("C", "F")]
-    # well_constraint = nx.MultiDiGraph(figure_3a)
-    # pebblegame(well_constraint, 3, 3)
+    generic_pebblegame(test_samples.sample10_graph, 2, 3)
 
-    '''under-constraint-Beispiel:'''
-    # figure_3b = [("A", "B"), ("A", "C"), ("A", "C"), ("A", "D"), ("A", "E"), ("A", "E"), ("B", "D"), ("B", "D"),
-    #              ("C", "D"), ("C", "D"), ("C", "D"),
-    #              ("C", "E"), ("C", "F"), ("C", "F",)]
-    # under_constraint = nx.MultiDiGraph(figure_3b)
-    # pebblegame(under_constraint, 3, 3)
-
-    # '''over-constraint-Beispiel:'''
-    # full_graph_octaeder = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6), (3, 4), (3, 5),
-    #                        (3, 6), (4, 5),
-    #                        (4, 6), (5, 6)]
-    # G = nx.from_edgelist(full_graph_octaeder)
-    # G_5 = create5Ggraph(G)
-    # pebblegame(G_5, 5, 6)
-
-    # '''other-Beispiel but definetely with rigid components:'''
-    # full_graph_octaeder_and_additional_limb = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6),
-    #                                            (3, 4), (3, 5), (3, 6), (4, 5),
-    #                                            (4, 6), (5, 6), (6, 7)]
-    # G = nx.from_edgelist(full_graph_octaeder_and_additional_limb)
-    # G_5 = create5Ggraph(G)
-    # pebblegame(G_5, 5, 6)
-
-    # '''Moser spindle (Laman-Graph mit 7 Knoten; für 2,3 Pebble Game'''
-    # laman7 = [("A", "B"), ("A", "C"), ("B", "C"), ("C", "D"), ("B", "D"), ("D", "E"), ("D", "F"), ("E", "F"),
-    #           ("E", "G"), ("F", "G"),
-    #           ("G", "A")]
-    # well_constraint = nx.from_edgelist(laman7)
-    # pebblegame(well_constraint, 2, 3)
-
-    # '''Moser spindle 3D (3D  Hajós construction; für 5,6 Pebble Game'''
-    # '''2 Steife Komponenten im Graph enthalten; die um AD oder DG sich drehen können'''
-    # hajos_edges = [("A", "B"), ("A", "C"), ("B", "C"),("C", "D"), ("B", "D"), ("E", "F"), ("D", "F"),
-    #                ("D", "G"), (
-    #                    "F", "G"), ("E", "A"), ("G", "E")]
-    #
-    # hajos_graph = nx.from_edgelist(hajos_edges)
-    # hajos5G = create5Ggraph(hajos_graph)
-    # pebblegame(hajos5G, 5, 6)
-
-    '''Moser spindle (Laman-Graph mit 7 Knoten; für 2,3 Pebble Game'''
-    laman7 = [("A", "B"), ("A", "C"), ("B", "C"), ("C", "D"), ("B", "D"), ("D", "E"), ("D", "F"), ("E", "F"),
-              ("E", "G"), ("F", "G"),
-              ("G", "A")]
-    well_constraint = nx.from_edgelist(laman7)
-    generic_pebblegame(well_constraint, 2, 3)
-
-    # overconstrant_1 = [(0, 1), (0, 8), (0, 9), (0, 11), (1, 7), (1, 8), (1, 10), (1, 11), (1, 13), (2, 3), (2, 7),
-    #                    (2, 8), (2, 14), (3, 6), (3, 14), (4, 5), (4, 8), (4, 9), (4, 11), (4, 12), (5, 6), (5, 7),
-    #                    (5, 9), (5, 12), (5, 13), (6, 13), (6, 14), (7, 12), (7, 14), (8, 12), (8, 13), (8, 14), (9, 10),
-    #                    (9, 12), (10, 11)]
-    # over = nx.from_edgelist(overconstrant_1)
-    # generic_pebblegame(over, 2, 3)
-    # #
-    # underconstraint = [(0, 6), (0, 11), (0, 12), (0, 14), (1, 6), (1, 7), (1, 8), (1, 9), (2, 12), (3, 6), (3, 7),
-    #                    (3, 10), (4, 5), (4, 7), (4, 12), (4, 14), (5, 8), (7, 11), (7, 13), (9, 10), (9, 11), (9, 13),
-    #                    (10, 12), (12, 14), (13, 14)]
-    #
-    # under = nx.from_edgelist(underconstraint)
-    # generic_pebblegame(under, 2, 3)
-
-    # other_0 = [(0, 4), (0, 6), (0, 11), (0, 13), (1, 4), (1, 5), (1, 9), (1, 10), (1, 11), (1, 12), (1, 13), (2, 3),
-    #            (3, 5), (3, 7), (3, 13), (4, 5), (4, 8), (4, 11), (5, 9), (5, 10), (5, 13), (6, 10), (6, 11), (6, 14),
-    #            (7, 8), (7, 10), (7, 14), (8, 9), (8, 11), (9, 12), (11, 13), (12, 13)]
-    # other = nx.from_edgelist(other_0)
-    # generic_pebblegame(other, 2, 3)
-
-    # path = "graphs/test_2octa.edgelist"
-    # open(path, "rb")
-    # test2_octa = nx.read_edgelist(path)
-    # test2_octa_5G = create5Ggraph(test2_octa)
-    # pebblegame(test2_octa_5G, 5, 6)
-
-'''zusätzliches pebble_game für l<k, wobei selbstreflexive Kanten erlaubt sind. hierbei sind Komponenten auch Knotendisjunkt. 
-Ein Knoten existiert nur in einer Komponente. Eine Komponente, kann dabei eine andere Komponente schlucken'''
-
-'''d.notes[index(x) vermeiden, hierbei pd.dataframe zurückgreifen und dabei node_index als Name verwenden '''
-
-
-'''kl-sparsity eigenschaft'''
