@@ -2,4 +2,17 @@ Aufgaben/Fragen:
 - Vergleich von Atomebene und Aminosäureebene
 - Readme erstellen
 
-- UI tauschen zwischen genrischen pebblegame und component detection
+- dataframe mit componenten-index, spalte mit kanten in komponente und den knoten dazu
+
+- UI tauschen zwischen generischen pebblegame und component detection
+
+- sortierte komponentenliste verwenden
+
+
+
+
+
+
+####erledigt#####
+
+- Kanten als sets behandeln, damit Reihenfolge der Knoten keine Rolle spielt (done)

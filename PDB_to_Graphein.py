@@ -37,6 +37,9 @@ params_to_change = {"granularity": "atom"}
 #pg.pebblegame(oxy,5,6)
 
 def sort_dict(original_dict):
+
+    """Helper-Function to bring the components in ascending order"""
+
     # Extract the values and sort them
     sorted_values = sorted(set(original_dict.values()))
 
@@ -48,6 +51,38 @@ def sort_dict(original_dict):
 
     # Print the translated dictionary
     return translated_dict
+
+def refine_components(components):
+
+    components = []
+    components_to_remove = []
+    # Iterate through the components and mark isolated components for removal
+    for i in range(len(components)):
+        if len(components[i]) == 1:
+            components_to_remove.append(i)
+
+    # Iterate through the components to merge connected components
+    for i in range(len(components) - 1, -1, -1):
+        if i in components_to_remove:
+            continue
+
+        for j in range(i - 1, -1, -1):
+            if j in components_to_remove:
+                continue
+
+            for edge in components[i]:
+                if edge in components[j]:
+                    components[j].update(components[i])
+                    components_to_remove.append(i)
+                    break
+
+    # Remove the marked components
+    for i in sorted(components_to_remove, reverse=True):
+        components.pop(i)
+
+    return components
+
+
 
 def pdb_to_graph(path, only_covalent=True):
 
@@ -111,7 +146,9 @@ def load_and_pebble(path):
 
 
 def assign_components(G, components):
-    '''assigns components to nodes and edges'''
+
+    """assigns components to nodes and edges"""
+
     components = components
 
     for com in components:
@@ -120,6 +157,7 @@ def assign_components(G, components):
     print(len(components))
 
     nodes = list(G.nodes)
+
     d = {}
     for node in nodes:
         for idx, c in enumerate(components):
@@ -139,13 +177,17 @@ def assign_components(G, components):
     nx.set_node_attributes(G, d, "component")
 
     # Here we want to assign to each edge its component. If node is not in component we assign 0 to it.
+    # To compare the edges properly we have to treat the edges as set
+
     edges = list(G.edges)
+    edges = [frozenset(edge) for edge in edges]
+    components = [list(map(frozenset, component)) for component in components]
     d = {}
     for edge in edges:
         for idx, c in enumerate(components):
             if edge in d:
                 if edge in c:
-                    d[edge] = idx + 1  # die größeren komponenten sind weiter rechts
+                    d[edge] = idx + 1  # die größeren Komponenten sind weiter rechts
             else:
                 d[edge] = 0
 

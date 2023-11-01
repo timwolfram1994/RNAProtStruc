@@ -8,6 +8,7 @@ components = [{frozenset({'H', 'I'})}, {frozenset({'J', 'I'})},
               {frozenset({'A', 'C'})},
               {frozenset({'A', 'B'}), frozenset({'D', 'B'}), frozenset({'C', 'D'}), frozenset({'A', 'C'}),
                frozenset({'A', 'D'}), frozenset({'C', 'B'})}]
+
 components_to_remove = []
 
 # Iterate through the components and mark isolated components for removal
