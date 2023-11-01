@@ -36,6 +36,19 @@ params_to_change = {"granularity": "atom"}
 #oxy = pg.create5Ggraph(oxy)
 #pg.pebblegame(oxy,5,6)
 
+def sort_dict(original_dict):
+    # Extract the values and sort them
+    sorted_values = sorted(set(original_dict.values()))
+
+    # Create a mapping from the original values to their sorted order
+    value_to_order = {value: order for order, value in enumerate(sorted_values)}
+
+    # Create a new dictionary with values replaced by their sorted order
+    translated_dict = {key: value_to_order[value] for key, value in original_dict.items()}
+
+    # Print the translated dictionary
+    return translated_dict
+
 def pdb_to_graph(path, only_covalent=True):
 
     '''uses graphein to convert PDB-file to Graph'''
@@ -105,6 +118,8 @@ def assign_components(G, components):
         if len(com) == 1:
             components.remove(com)
     print(len(components))
+
+    nodes = list(G.nodes)
     d = {}
     for node in nodes:
         for idx, c in enumerate(components):
@@ -120,6 +135,7 @@ def assign_components(G, components):
                     else:
                         d[node] = 0
 
+    d = sort_dict(d)
     nx.set_node_attributes(G, d, "component")
 
     # Here we want to assign to each edge its component. If node is not in component we assign 0 to it.
@@ -133,6 +149,7 @@ def assign_components(G, components):
             else:
                 d[edge] = 0
 
+    d = sort_dict(d)
     nx.set_edge_attributes(G, d, name="component")
 
     return G

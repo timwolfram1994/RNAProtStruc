@@ -1,0 +1,5 @@
+Aufgaben/Fragen:
+- Vergleich von Atomebene und Aminosäureebene
+- Readme erstellen
+
+- UI tauschen zwischen genrischen pebblegame und component detection
