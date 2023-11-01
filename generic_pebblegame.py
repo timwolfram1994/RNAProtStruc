@@ -1,7 +1,6 @@
 import random
 import networkx as nx
-import test_samples
-
+import simple_test_samples
 
 def create5Ggraph(multigraph1G):
     """based on molecular conjuncture, this function converts a (multigraph) into a 5G-Graph
@@ -26,7 +25,9 @@ def create5Ggraph(multigraph1G):
 
 
 def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
-    def dfs_find_pebble(digraph: nx.MultiDiGraph, u, v):
+
+
+    def dfs_gather_pebble(digraph: nx.MultiDiGraph, u, v):
         """A function for a DFS, that stops immediately after a pebble is found on a node
         # to avoid unnessessary computational resources. It returns the boolean true,
         if a pebble has been found and the whole reach of u,v otherwise."""
@@ -84,16 +85,13 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     random.shuffle(edges_to_insert)
 
     while edges_to_insert:
-        print("------------------------------------------------------------------------")
-        print("REMAINING EDGES : ", len(edges_to_insert))
-        print("INSERTED EDGES : ", len(D.edges))
+
         # wähle eine zufällige Kante aus Edges_to_insert aus, über den Index der Liste einzufügender Kanten
         e = edges_to_insert.pop(-1)
 
         # Define u,v out of the edge to be inserted
         u = e[0]
         v = e[1]
-        print("edge to insert: ", u, v)
 
         '''though there might be cases for the generic pebblegame to tread special cases of loops 
         (i.e. edge(u,v)| u = v) we hereby decide to leave this control structure out, 
@@ -122,7 +120,7 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                 dfs_u = False
 
             if dfs_u == True:
-                dfs_u = dfs_find_pebble(D, u, v)
+                dfs_u = dfs_gather_pebble(D, u, v)
                 if dfs_u == True:
                     peb_u = peb_u + 1
             if peb_u + peb_v >= (l + 1):
@@ -132,7 +130,7 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             if D.nodes[v]["pebbles"] == k:
                 dfs_v = False
             if dfs_v == True:
-                dfs_v = dfs_find_pebble(D, v, u)
+                dfs_v = dfs_gather_pebble(D, v, u)
                 if dfs_v == True:
                     peb_v = peb_v + 1
 
@@ -163,5 +161,5 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
 
 if __name__ == "__main__":
-    generic_pebblegame(test_samples.sample10_graph, 2, 3)
+    generic_pebblegame(simple_test_samples.sample10_graph, 2, 3)
 

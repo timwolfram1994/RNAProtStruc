@@ -1,7 +1,6 @@
-
+import simple_test_samples
 import networkx as nx
 import pandas as pd
-import test_samples
 
 
 def create5Ggraph(multigraph1G):
@@ -268,7 +267,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             current_component = list(current_component)
             component_nodes_len = len(current_component)
 
-            component_edges = []
+            component_edges = set()
             '''to bypass unnecessary calls of D.nodes we use a pandas dataframe here 
             # and call the referring cells directly'''
             for i in range(0, component_nodes_len - 1):
@@ -277,8 +276,9 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                     node_j = current_component[j]
                     component_matrix.at[node_i, node_j] = 1
                     component_matrix.at[node_j, node_i] = 1
-                    component_edges.append((node_i, node_j))
-            identified_components.append(component_edges)
+                    component_edge = frozenset([node_i,node_j])
+                    component_edges.add(component_edge)
+            identified_components.append(set(component_edges))
 
     print("identified components: ", identified_components)
 
@@ -301,4 +301,4 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
 
 if __name__ == "__main__":
-    pebblegame(test_samples.sample10_graph, 2, 3)
+    pebblegame(simple_test_samples.sample11_graph, 2, 3)

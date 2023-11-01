@@ -61,3 +61,8 @@ sample09_graph = nx.from_edgelist(sample09)
 sample10 = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "E"), ("E", "F"), ("F", "A"), ("A", "G"), ("B", "H"), ("C", "H"),
             ("D", "H"), ("E", "G"), ("F", "G"), ("G", "H"),("A","I"),("B","I"),("C","I")]
 sample10_graph = nx.from_edgelist(sample10)
+
+'''11. under-constraint-Beispiel (test-sample aus 3 seperaten Komponenten) für 2,3 Pebble Game'''
+sample11 = [("A", "B"), ("B", "C"), ("C", "D"),("A","C"),("B","D"), ("D", "E"), ("E", "F"), ("D", "F"), ("D", "G"), ("F", "G"), ("C", "J"),
+            ("G", "H"), ("J", "H"), ("H", "I"), ("I", "J")]
+sample11_graph = nx.from_edgelist(sample11)
