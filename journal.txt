@@ -1,5 +1,7 @@
 Aufgaben/Fragen:
 
+--debuggen von print node attributes
+--debuggen von print components
 
 - Vergleich von Atomebene und Aminosäureebene
 
@@ -9,14 +11,28 @@ Aufgaben/Fragen:
 
 - Readme erstellen
 
+- UI tauschen zwischen generischen pebblegame und component detection
+
+- rigidity matrix ausprobieren
+
+### UI ###
+
+OPTIONS:
+
+-- generische Pebblegame oder component detection
+
+
+- outputs default einfach alles:
+-- komponenten-csv mit knoten und kanten
+-- graph csv mit knotenattributen
 
 
 
 
-- sortierte komponentenliste verwenden
 
 
-- dataframe mit componenten-index, spalte mit kanten in komponente und den knoten dazu (done)
+
+
 
 
 
@@ -24,4 +40,6 @@ Aufgaben/Fragen:
 
 - Kanten als sets behandeln, damit Reihenfolge der Knoten keine Rolle spielt (done)
 
-- UI tauschen zwischen generischen pebblegame und component detection
+- sortierte komponentenliste verwenden
+
+- dataframe mit componenten-index, spalte mit kanten in komponente und den knoten dazu (done)

@@ -1,4 +1,4 @@
-chain_id,residue_name,residue_number,atom_type,element_symbol,coords,b_factor,meiler,component
+chain_id,residue_name,residue_number,atom_type,element_symbol,coords,b_factor,meiler,,component
 A,CYS,1,N,N,[4.874 2.855 0.366],0.0,"dim_1    1.77
 dim_2    0.13
 dim_3    2.43
@@ -6,7 +6,7 @@ dim_4    1.54
 dim_5    6.35
 dim_6    0.17
 dim_7    0.41
-Name: CYS, dtype: float64",0
+Name: CYS, dtype: float64",,0
 A,CYS,1,CA,C,[3.791 1.923 0.075],0.0,"dim_1    1.77
 dim_2    0.13
 dim_3    2.43
@@ -14,7 +14,7 @@ dim_4    1.54
 dim_5    6.35
 dim_6    0.17
 dim_7    0.41
-Name: CYS, dtype: float64",0
+Name: CYS, dtype: float64",,0
 A,CYS,1,C,C,[4.157 0.518 0.5  ],0.0,"dim_1    1.77
 dim_2    0.13
 dim_3    2.43
@@ -22,7 +22,7 @@ dim_4    1.54
 dim_5    6.35
 dim_6    0.17
 dim_7    0.41
-Name: CYS, dtype: float64",0
+Name: CYS, dtype: float64",,0
 A,CYS,1,O,O,[5.232 0.286 1.045],0.0,"dim_1    1.77
 dim_2    0.13
 dim_3    2.43
@@ -30,7 +30,7 @@ dim_4    1.54
 dim_5    6.35
 dim_6    0.17
 dim_7    0.41
-Name: CYS, dtype: float64",0
+Name: CYS, dtype: float64",,0
 A,CYS,1,CB,C,[ 3.435  1.946 -1.418],0.0,"dim_1    1.77
 dim_2    0.13
 dim_3    2.43
@@ -38,7 +38,7 @@ dim_4    1.54
 dim_5    6.35
 dim_6    0.17
 dim_7    0.41
-Name: CYS, dtype: float64",0
+Name: CYS, dtype: float64",,0
 A,CYS,1,SG,S,[ 2.665  3.502 -1.99 ],0.0,"dim_1    1.77
 dim_2    0.13
 dim_3    2.43
@@ -46,7 +46,7 @@ dim_4    1.54
 dim_5    6.35
 dim_6    0.17
 dim_7    0.41
-Name: CYS, dtype: float64",0
+Name: CYS, dtype: float64",,0
 A,TYR,2,N,N,[ 3.252 -0.399  0.268],0.0,"dim_1    2.94
 dim_2    0.30
 dim_3    6.47
@@ -54,7 +54,7 @@ dim_4    0.96
 dim_5    5.66
 dim_6    0.25
 dim_7    0.41
-Name: TYR, dtype: float64",0
+Name: TYR, dtype: float64",,0
 A,TYR,2,CA,C,[ 3.387 -1.76   0.55 ],0.0,"dim_1    2.94
 dim_2    0.30
 dim_3    6.47
@@ -62,7 +62,7 @@ dim_4    0.96
 dim_5    5.66
 dim_6    0.25
 dim_7    0.41
-Name: TYR, dtype: float64",0
+Name: TYR, dtype: float64",,0
 A,TYR,2,C,C,[ 2.361 -2.413 -0.333],0.0,"dim_1    2.94
 dim_2    0.30
 dim_3    6.47
@@ -70,7 +70,7 @@ dim_4    0.96
 dim_5    5.66
 dim_6    0.25
 dim_7    0.41
-Name: TYR, dtype: float64",0
+Name: TYR, dtype: float64",,0
 A,TYR,2,O,O,[ 1.436 -1.723 -0.788],0.0,"dim_1    2.94
 dim_2    0.30
 dim_3    6.47
@@ -78,7 +78,7 @@ dim_4    0.96
 dim_5    5.66
 dim_6    0.25
 dim_7    0.41
-Name: TYR, dtype: float64",0
+Name: TYR, dtype: float64",,0
 A,TYR,2,CB,C,[ 3.1   -2.041  2.041],0.0,"dim_1    2.94
 dim_2    0.30
 dim_3    6.47
@@ -86,7 +86,7 @@ dim_4    0.96
 dim_5    5.66
 dim_6    0.25
 dim_7    0.41
-Name: TYR, dtype: float64",0
+Name: TYR, dtype: float64",,0
 A,TYR,2,CG,C,[ 3.274 -3.486  2.457],0.0,"dim_1    2.94
 dim_2    0.30
 dim_3    6.47
@@ -94,7 +94,7 @@ dim_4    0.96
 dim_5    5.66
 dim_6    0.25
 dim_7    0.41
-Name: TYR, dtype: float64",1
+Name: TYR, dtype: float64",,1
 A,TYR,2,CD1,C,[ 4.53  -4.073  2.473],0.0,"dim_1    2.94
 dim_2    0.30
 dim_3    6.47
@@ -102,7 +102,7 @@ dim_4    0.96
 dim_5    5.66
 dim_6    0.25
 dim_7    0.41
-Name: TYR, dtype: float64",2
+Name: TYR, dtype: float64",,2
 A,TYR,2,CD2,C,[ 2.185 -4.258  2.838],0.0,"dim_1    2.94
 dim_2    0.30
 dim_3    6.47
@@ -110,7 +110,7 @@ dim_4    0.96
 dim_5    5.66
 dim_6    0.25
 dim_7    0.41
-Name: TYR, dtype: float64",3
+Name: TYR, dtype: float64",,3
 A,TYR,2,CE1,C,[ 4.697 -5.383  2.85 ],0.0,"dim_1    2.94
 dim_2    0.30
 dim_3    6.47
@@ -118,7 +118,7 @@ dim_4    0.96
 dim_5    5.66
 dim_6    0.25
 dim_7    0.41
-Name: TYR, dtype: float64",2
+Name: TYR, dtype: float64",,2
 A,TYR,2,CE2,C,[ 2.348 -5.571  3.218],0.0,"dim_1    2.94
 dim_2    0.30
 dim_3    6.47
@@ -126,7 +126,7 @@ dim_4    0.96
 dim_5    5.66
 dim_6    0.25
 dim_7    0.41
-Name: TYR, dtype: float64",3
+Name: TYR, dtype: float64",,3
 A,TYR,2,CZ,C,[ 3.607 -6.128  3.221],0.0,"dim_1    2.94
 dim_2    0.30
 dim_3    6.47
@@ -134,7 +134,7 @@ dim_4    0.96
 dim_5    5.66
 dim_6    0.25
 dim_7    0.41
-Name: TYR, dtype: float64",0
+Name: TYR, dtype: float64",,0
 A,TYR,2,OH,O,[ 3.773 -7.431  3.601],0.0,"dim_1    2.94
 dim_2    0.30
 dim_3    6.47
@@ -142,7 +142,7 @@ dim_4    0.96
 dim_5    5.66
 dim_6    0.25
 dim_7    0.41
-Name: TYR, dtype: float64",0
+Name: TYR, dtype: float64",,0
 A,ILE,3,N,N,[ 2.531 -3.68  -0.581],0.0,"dim_1    4.19
 dim_2    0.19
 dim_3    4.00
@@ -150,7 +150,7 @@ dim_4    1.80
 dim_5    6.04
 dim_6    0.30
 dim_7    0.45
-Name: ILE, dtype: float64",0
+Name: ILE, dtype: float64",,0
 A,ILE,3,CA,C,[ 1.677 -4.511 -1.466],0.0,"dim_1    4.19
 dim_2    0.19
 dim_3    4.00
@@ -158,7 +158,7 @@ dim_4    1.80
 dim_5    6.04
 dim_6    0.30
 dim_7    0.45
-Name: ILE, dtype: float64",0
+Name: ILE, dtype: float64",,0
 A,ILE,3,C,C,[ 0.199 -4.221 -1.291],0.0,"dim_1    4.19
 dim_2    0.19
 dim_3    4.00
@@ -166,7 +166,7 @@ dim_4    1.80
 dim_5    6.04
 dim_6    0.30
 dim_7    0.45
-Name: ILE, dtype: float64",0
+Name: ILE, dtype: float64",,0
 A,ILE,3,O,O,[-0.519 -3.905 -2.24 ],0.0,"dim_1    4.19
 dim_2    0.19
 dim_3    4.00
@@ -174,7 +174,7 @@ dim_4    1.80
 dim_5    6.04
 dim_6    0.30
 dim_7    0.45
-Name: ILE, dtype: float64",0
+Name: ILE, dtype: float64",,0
 A,ILE,3,CB,C,[ 1.928 -6.029 -1.237],0.0,"dim_1    4.19
 dim_2    0.19
 dim_3    4.00
@@ -182,7 +182,7 @@ dim_4    1.80
 dim_5    6.04
 dim_6    0.30
 dim_7    0.45
-Name: ILE, dtype: float64",0
+Name: ILE, dtype: float64",,0
 A,ILE,3,CG1,C,[ 3.427 -6.341 -1.317],0.0,"dim_1    4.19
 dim_2    0.19
 dim_3    4.00
@@ -190,7 +190,7 @@ dim_4    1.80
 dim_5    6.04
 dim_6    0.30
 dim_7    0.45
-Name: ILE, dtype: float64",0
+Name: ILE, dtype: float64",,0
 A,ILE,3,CG2,C,[ 1.161 -6.856 -2.271],0.0,"dim_1    4.19
 dim_2    0.19
 dim_3    4.00
@@ -198,7 +198,7 @@ dim_4    1.80
 dim_5    6.04
 dim_6    0.30
 dim_7    0.45
-Name: ILE, dtype: float64",0
+Name: ILE, dtype: float64",,0
 A,ILE,3,CD1,C,[ 3.786 -7.783 -1.018],0.0,"dim_1    4.19
 dim_2    0.19
 dim_3    4.00
@@ -206,7 +206,7 @@ dim_4    1.80
 dim_5    6.04
 dim_6    0.30
 dim_7    0.45
-Name: ILE, dtype: float64",0
+Name: ILE, dtype: float64",,0
 A,GLN,4,N,N,[-0.204 -4.279 -0.093],0.0,"dim_1    1.56
 dim_2    0.18
 dim_3    3.95
@@ -214,7 +214,7 @@ dim_4   -0.22
 dim_5    5.65
 dim_6    0.35
 dim_7    0.25
-Name: GLN, dtype: float64",0
+Name: GLN, dtype: float64",,0
 A,GLN,4,CA,C,[-1.601 -4.078  0.283],0.0,"dim_1    1.56
 dim_2    0.18
 dim_3    3.95
@@ -222,7 +222,7 @@ dim_4   -0.22
 dim_5    5.65
 dim_6    0.35
 dim_7    0.25
-Name: GLN, dtype: float64",0
+Name: GLN, dtype: float64",,0
 A,GLN,4,C,C,[-1.79  -2.792  1.112],0.0,"dim_1    1.56
 dim_2    0.18
 dim_3    3.95
@@ -230,7 +230,7 @@ dim_4   -0.22
 dim_5    5.65
 dim_6    0.35
 dim_7    0.25
-Name: GLN, dtype: float64",0
+Name: GLN, dtype: float64",,0
 A,GLN,4,O,O,[-2.726 -2.685  1.911],0.0,"dim_1    1.56
 dim_2    0.18
 dim_3    3.95
@@ -238,7 +238,7 @@ dim_4   -0.22
 dim_5    5.65
 dim_6    0.35
 dim_7    0.25
-Name: GLN, dtype: float64",0
+Name: GLN, dtype: float64",,0
 A,GLN,4,CB,C,[-2.146 -5.314  1.032],0.0,"dim_1    1.56
 dim_2    0.18
 dim_3    3.95
@@ -246,7 +246,7 @@ dim_4   -0.22
 dim_5    5.65
 dim_6    0.35
 dim_7    0.25
-Name: GLN, dtype: float64",0
+Name: GLN, dtype: float64",,0
 A,GLN,4,CG,C,[-1.441 -5.647  2.338],0.0,"dim_1    1.56
 dim_2    0.18
 dim_3    3.95
@@ -254,7 +254,7 @@ dim_4   -0.22
 dim_5    5.65
 dim_6    0.35
 dim_7    0.25
-Name: GLN, dtype: float64",0
+Name: GLN, dtype: float64",,0
 A,GLN,4,CD,C,[-2.01  -6.885  3.023],0.0,"dim_1    1.56
 dim_2    0.18
 dim_3    3.95
@@ -262,7 +262,7 @@ dim_4   -0.22
 dim_5    5.65
 dim_6    0.35
 dim_7    0.25
-Name: GLN, dtype: float64",0
+Name: GLN, dtype: float64",,0
 A,GLN,4,OE1,O,[-2.494 -7.82   2.381],0.0,"dim_1    1.56
 dim_2    0.18
 dim_3    3.95
@@ -270,7 +270,7 @@ dim_4   -0.22
 dim_5    5.65
 dim_6    0.35
 dim_7    0.25
-Name: GLN, dtype: float64",0
+Name: GLN, dtype: float64",,0
 A,GLN,4,NE2,N,[-1.983 -6.89   4.32 ],0.0,"dim_1    1.56
 dim_2    0.18
 dim_3    3.95
@@ -278,7 +278,7 @@ dim_4   -0.22
 dim_5    5.65
 dim_6    0.35
 dim_7    0.25
-Name: GLN, dtype: float64",0
+Name: GLN, dtype: float64",,0
 A,ASN,5,N,N,[-0.942 -1.802  0.876],0.0,"dim_1    1.60
 dim_2    0.13
 dim_3    2.95
@@ -286,7 +286,7 @@ dim_4   -0.60
 dim_5    6.52
 dim_6    0.21
 dim_7    0.22
-Name: ASN, dtype: float64",0
+Name: ASN, dtype: float64",,0
 A,ASN,5,CA,C,[-1.01  -0.533  1.594],0.0,"dim_1    1.60
 dim_2    0.13
 dim_3    2.95
@@ -294,7 +294,7 @@ dim_4   -0.60
 dim_5    6.52
 dim_6    0.21
 dim_7    0.22
-Name: ASN, dtype: float64",0
+Name: ASN, dtype: float64",,0
 A,ASN,5,C,C,[-0.214  0.526  0.877],0.0,"dim_1    1.60
 dim_2    0.13
 dim_3    2.95
@@ -302,7 +302,7 @@ dim_4   -0.60
 dim_5    6.52
 dim_6    0.21
 dim_7    0.22
-Name: ASN, dtype: float64",0
+Name: ASN, dtype: float64",,0
 A,ASN,5,O,O,[0.937 0.794 1.192],0.0,"dim_1    1.60
 dim_2    0.13
 dim_3    2.95
@@ -310,7 +310,7 @@ dim_4   -0.60
 dim_5    6.52
 dim_6    0.21
 dim_7    0.22
-Name: ASN, dtype: float64",0
+Name: ASN, dtype: float64",,0
 A,ASN,5,CB,C,[-0.572 -0.65   3.081],0.0,"dim_1    1.60
 dim_2    0.13
 dim_3    2.95
@@ -318,7 +318,7 @@ dim_4   -0.60
 dim_5    6.52
 dim_6    0.21
 dim_7    0.22
-Name: ASN, dtype: float64",0
+Name: ASN, dtype: float64",,0
 A,ASN,5,CG,C,[-0.616  0.69   3.831],0.0,"dim_1    1.60
 dim_2    0.13
 dim_3    2.95
@@ -326,7 +326,7 @@ dim_4   -0.60
 dim_5    6.52
 dim_6    0.21
 dim_7    0.22
-Name: ASN, dtype: float64",0
+Name: ASN, dtype: float64",,0
 A,ASN,5,OD1,O,[0.387 1.404 3.922],0.0,"dim_1    1.60
 dim_2    0.13
 dim_3    2.95
@@ -334,7 +334,7 @@ dim_4   -0.60
 dim_5    6.52
 dim_6    0.21
 dim_7    0.22
-Name: ASN, dtype: float64",0
+Name: ASN, dtype: float64",,0
 A,ASN,5,ND2,N,[-1.765  1.049  4.341],0.0,"dim_1    1.60
 dim_2    0.13
 dim_3    2.95
@@ -342,7 +342,7 @@ dim_4   -0.60
 dim_5    6.52
 dim_6    0.21
 dim_7    0.22
-Name: ASN, dtype: float64",0
+Name: ASN, dtype: float64",,0
 A,CYS,6,N,N,[-0.764  1.026 -0.158],0.0,"dim_1    1.77
 dim_2    0.13
 dim_3    2.43
@@ -350,7 +350,7 @@ dim_4    1.54
 dim_5    6.35
 dim_6    0.17
 dim_7    0.41
-Name: CYS, dtype: float64",0
+Name: CYS, dtype: float64",,0
 A,CYS,6,CA,C,[-0.14   2.101 -0.873],0.0,"dim_1    1.77
 dim_2    0.13
 dim_3    2.43
@@ -358,7 +358,7 @@ dim_4    1.54
 dim_5    6.35
 dim_6    0.17
 dim_7    0.41
-Name: CYS, dtype: float64",0
+Name: CYS, dtype: float64",,0
 A,CYS,6,C,C,[-1.051  3.316 -0.861],0.0,"dim_1    1.77
 dim_2    0.13
 dim_3    2.43
@@ -366,7 +366,7 @@ dim_4    1.54
 dim_5    6.35
 dim_6    0.17
 dim_7    0.41
-Name: CYS, dtype: float64",0
+Name: CYS, dtype: float64",,0
 A,CYS,6,O,O,[-2.141  3.274 -1.434],0.0,"dim_1    1.77
 dim_2    0.13
 dim_3    2.43
@@ -374,7 +374,7 @@ dim_4    1.54
 dim_5    6.35
 dim_6    0.17
 dim_7    0.41
-Name: CYS, dtype: float64",0
+Name: CYS, dtype: float64",,0
 A,CYS,6,CB,C,[ 0.193  1.681 -2.308],0.0,"dim_1    1.77
 dim_2    0.13
 dim_3    2.43
@@ -382,7 +382,7 @@ dim_4    1.54
 dim_5    6.35
 dim_6    0.17
 dim_7    0.41
-Name: CYS, dtype: float64",0
+Name: CYS, dtype: float64",,0
 A,CYS,6,SG,S,[ 1.185  2.902 -3.264],0.0,"dim_1    1.77
 dim_2    0.13
 dim_3    2.43
@@ -390,7 +390,7 @@ dim_4    1.54
 dim_5    6.35
 dim_6    0.17
 dim_7    0.41
-Name: CYS, dtype: float64",0
+Name: CYS, dtype: float64",,0
 A,PRO,7,N,N,[-0.66   4.386 -0.143],0.0,"dim_1    2.67
 dim_2    0.00
 dim_3    2.72
@@ -398,7 +398,7 @@ dim_4    0.72
 dim_5    6.80
 dim_6    0.13
 dim_7    0.34
-Name: PRO, dtype: float64",5
+Name: PRO, dtype: float64",,5
 A,PRO,7,CA,C,[-1.424  5.635 -0.117],0.0,"dim_1    2.67
 dim_2    0.00
 dim_3    2.72
@@ -406,7 +406,7 @@ dim_4    0.72
 dim_5    6.80
 dim_6    0.13
 dim_7    0.34
-Name: PRO, dtype: float64",4
+Name: PRO, dtype: float64",,4
 A,PRO,7,C,C,[-1.574  6.192 -1.529],0.0,"dim_1    2.67
 dim_2    0.00
 dim_3    2.72
@@ -414,7 +414,7 @@ dim_4    0.72
 dim_5    6.80
 dim_6    0.13
 dim_7    0.34
-Name: PRO, dtype: float64",0
+Name: PRO, dtype: float64",,0
 A,PRO,7,O,O,[-0.59   6.58  -2.165],0.0,"dim_1    2.67
 dim_2    0.00
 dim_3    2.72
@@ -422,7 +422,7 @@ dim_4    0.72
 dim_5    6.80
 dim_6    0.13
 dim_7    0.34
-Name: PRO, dtype: float64",0
+Name: PRO, dtype: float64",,0
 A,PRO,7,CB,C,[-0.555  6.569  0.729],0.0,"dim_1    2.67
 dim_2    0.00
 dim_3    2.72
@@ -430,7 +430,7 @@ dim_4    0.72
 dim_5    6.80
 dim_6    0.13
 dim_7    0.34
-Name: PRO, dtype: float64",6
+Name: PRO, dtype: float64",,6
 A,PRO,7,CG,C,[0.282 5.665 1.553],0.0,"dim_1    2.67
 dim_2    0.00
 dim_3    2.72
@@ -438,7 +438,7 @@ dim_4    0.72
 dim_5    6.80
 dim_6    0.13
 dim_7    0.34
-Name: PRO, dtype: float64",7
+Name: PRO, dtype: float64",,7
 A,PRO,7,CD,C,[0.537 4.459 0.71 ],0.0,"dim_1    2.67
 dim_2    0.00
 dim_3    2.72
@@ -446,7 +446,7 @@ dim_4    0.72
 dim_5    6.80
 dim_6    0.13
 dim_7    0.34
-Name: PRO, dtype: float64",7
+Name: PRO, dtype: float64",,7
 A,LEU,8,N,N,[-2.786  6.199 -2.024],0.0,"dim_1    2.59
 dim_2    0.19
 dim_3    4.00
@@ -454,7 +454,7 @@ dim_4    1.70
 dim_5    6.04
 dim_6    0.39
 dim_7    0.31
-Name: LEU, dtype: float64",0
+Name: LEU, dtype: float64",,0
 A,LEU,8,CA,C,[-3.044  6.624 -3.392],0.0,"dim_1    2.59
 dim_2    0.19
 dim_3    4.00
@@ -462,7 +462,7 @@ dim_4    1.70
 dim_5    6.04
 dim_6    0.39
 dim_7    0.31
-Name: LEU, dtype: float64",0
+Name: LEU, dtype: float64",,0
 A,LEU,8,C,C,[-3.389  8.088 -3.457],0.0,"dim_1    2.59
 dim_2    0.19
 dim_3    4.00
@@ -470,7 +470,7 @@ dim_4    1.70
 dim_5    6.04
 dim_6    0.39
 dim_7    0.31
-Name: LEU, dtype: float64",0
+Name: LEU, dtype: float64",,0
 A,LEU,8,O,O,[-3.608  8.661 -4.523],0.0,"dim_1    2.59
 dim_2    0.19
 dim_3    4.00
@@ -478,7 +478,7 @@ dim_4    1.70
 dim_5    6.04
 dim_6    0.39
 dim_7    0.31
-Name: LEU, dtype: float64",0
+Name: LEU, dtype: float64",,0
 A,LEU,8,CB,C,[-4.136  5.783 -4.023],0.0,"dim_1    2.59
 dim_2    0.19
 dim_3    4.00
@@ -486,7 +486,7 @@ dim_4    1.70
 dim_5    6.04
 dim_6    0.39
 dim_7    0.31
-Name: LEU, dtype: float64",0
+Name: LEU, dtype: float64",,0
 A,LEU,8,CG,C,[-3.848  4.28  -4.173],0.0,"dim_1    2.59
 dim_2    0.19
 dim_3    4.00
@@ -494,7 +494,7 @@ dim_4    1.70
 dim_5    6.04
 dim_6    0.39
 dim_7    0.31
-Name: LEU, dtype: float64",0
+Name: LEU, dtype: float64",,0
 A,LEU,8,CD1,C,[-5.036  3.567 -4.795],0.0,"dim_1    2.59
 dim_2    0.19
 dim_3    4.00
@@ -502,7 +502,7 @@ dim_4    1.70
 dim_5    6.04
 dim_6    0.39
 dim_7    0.31
-Name: LEU, dtype: float64",0
+Name: LEU, dtype: float64",,0
 A,LEU,8,CD2,C,[-2.59   4.042 -5.   ],0.0,"dim_1    2.59
 dim_2    0.19
 dim_3    4.00
@@ -510,7 +510,7 @@ dim_4    1.70
 dim_5    6.04
 dim_6    0.39
 dim_7    0.31
-Name: LEU, dtype: float64",0
+Name: LEU, dtype: float64",,0
 A,GLY,9,N,N,[-3.406  8.654 -2.333],0.0,"dim_1    0.00
 dim_2    0.00
 dim_3    0.00
@@ -518,7 +518,7 @@ dim_4    0.00
 dim_5    6.07
 dim_6    0.13
 dim_7    0.15
-Name: GLY, dtype: float64",0
+Name: GLY, dtype: float64",,0
 A,GLY,9,CA,C,[-3.689 10.034 -2.161],0.0,"dim_1    0.00
 dim_2    0.00
 dim_3    0.00
@@ -526,7 +526,7 @@ dim_4    0.00
 dim_5    6.07
 dim_6    0.13
 dim_7    0.15
-Name: GLY, dtype: float64",0
+Name: GLY, dtype: float64",,0
 A,GLY,9,C,C,[-3.647 10.353 -0.712],0.0,"dim_1    0.00
 dim_2    0.00
 dim_3    0.00
@@ -534,7 +534,7 @@ dim_4    0.00
 dim_5    6.07
 dim_6    0.13
 dim_7    0.15
-Name: GLY, dtype: float64",0
+Name: GLY, dtype: float64",,0
 A,GLY,9,O,O,[-3.337 11.487 -0.337],0.0,"dim_1    0.00
 dim_2    0.00
 dim_3    0.00
@@ -542,7 +542,7 @@ dim_4    0.00
 dim_5    6.07
 dim_6    0.13
 dim_7    0.15
-Name: GLY, dtype: float64",0
+Name: GLY, dtype: float64",,0
 A,GLY,9,OXT,O,[-3.916  9.443  0.096],0.0,"dim_1    0.00
 dim_2    0.00
 dim_3    0.00
@@ -550,4 +550,5 @@ dim_4    0.00
 dim_5    6.07
 dim_6    0.13
 dim_7    0.15
-Name: GLY, dtype: float64",0
+Name: GLY, dtype: float64",,0
+,,,,,,,,

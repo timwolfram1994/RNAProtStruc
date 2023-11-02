@@ -26,7 +26,7 @@ import PDB_to_Graphein as pdg
 
 ### hiv1 Atom-Level with intramolecular bindings
 
-path = 'pdb_samples/2mgo.pdb'
+path = 'pdb_samples/hiv1_homology_model.pdb'
 
 hiv1 = pdg.pdb_to_graph(path, only_covalent=False)
 comp = pdg.find_components(hiv1, path)
@@ -36,15 +36,15 @@ df.to_csv('node_attributes/hiv1_intra.csv')
 
 
 
-'''p = plotly_protein_structure_graph(
+p = plotly_protein_structure_graph(
         hiv1,
-        colour_edges_by="kind",
+        colour_edges_by="component",
         colour_nodes_by="component",
         label_node_ids=False,
         plot_title="Peptide backbone graph. Nodes coloured by components",
         node_size_multiplier=1
     )
-p.show()'''
+p.show()
 
 
 #print(nx.get_edge_attributes(hiv1,'component'))

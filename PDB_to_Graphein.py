@@ -84,12 +84,12 @@ def refine_components(components):
 
 
 
-def pdb_to_graph(path, only_covalent=True):
+def pdb_to_graph(path, only_covalent=True, gran="atom"):
 
     '''uses graphein to convert PDB-file to Graph'''
     # decide if we construct edges only with covalent bonds or consider sidechain-interactions
     if only_covalent == True:
-        params_to_change = {"granularity": "atom", "edge_construction_functions": [add_atomic_edges]}
+        params_to_change = {"granularity": gran, "edge_construction_functions": [add_atomic_edges]}
     else:
         params_to_change = {"granularity": "atom", "edge_construction_functions": [
             add_hydrogen_bond_interactions,
@@ -207,6 +207,7 @@ def assign_components(G, components):
 
 def print_attributes(G):
 
+
     # Get the node attributes as a dictionary
     node_attributes = dict(G.nodes(data=True))
 
@@ -220,7 +221,8 @@ def print_component_dataframe(component_list):
     """creates dataframe out of components. one column with a list of nodes
     and one column with a list of edges"""
 
-    component_list = [set([frozenset(edge) for edge in edge_list]) for edge_list in component_list]
+    #component_list = [set([frozenset(edge) for edge in edge_list]) for edge_list in component_list]
+
     components = refine_components(component_list)  # use the refine_components function
     # convert the nested sets into nested lists
     edge_components = [[list(edge) for edge in component] for component in components]
