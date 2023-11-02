@@ -54,7 +54,7 @@ def sort_dict(original_dict):
 
 def refine_components(components):
 
-    components = []
+
     components_to_remove = []
     # Iterate through the components and mark isolated components for removal
     for i in range(len(components)):
@@ -144,6 +144,19 @@ def load_and_pebble(path):
 
     return component_list
 
+def find_components(G):
+
+    """performs 5,6 pebblegame based component-detection (Paper: lee and streinu)"""
+
+    G = pg.create5Ggraph(G)
+    component_list = pg.pebblegame(G, 5, 6)
+
+    with open(os.path.basename(path).split('.')[0] + '.txt', 'w') as file:
+        for item in component_list:
+            file.write(str(item) + '\n')
+
+    return component_list
+
 
 def assign_components(G, components):
 
@@ -206,6 +219,36 @@ def print_attributes(G):
     # Convert the dictionary to a Pandas DataFrame
     df = pd.DataFrame.from_dict(node_attributes, orient='index')
     return df
+
+
+def print_component_dataframe(component_list):
+
+    """creates dataframe out of components. one column with a list of nodes
+    and one column with a list of edges"""
+
+    component_list = [set([frozenset(edge) for edge in edge_list]) for edge_list in component_list]
+    components = refine_components(component_list)  # use the refine_components function
+    # convert the nested sets into nested lists
+    edge_components = [[list(edge) for edge in component] for component in components]
+    # gib dict mit index= componente und value= Liste an Kanten
+    edge_dict = {}
+    for idx, component in enumerate(edge_components):
+        edge_dict[idx + 1] = str(component)
+
+    # gib dicts mit index=componente und value= Liste an Knoten
+    node_components = [set([item for sublist in inner_list for item in sublist]) for inner_list in components]
+    node_dict = {}
+    for idx, comp in enumerate(node_components):
+        node_dict[idx + 1] = str(comp)
+
+    # create Dataframe with node-compnents and edge-components
+    df1 = pd.DataFrame.from_dict(node_dict, orient='index', columns=['Nodes'])
+    df2 = pd.DataFrame.from_dict(edge_dict, orient='index', columns=['Edges'])
+
+    # Concatenate the DataFrames along the columns (axis=1)
+    result_df = pd.concat([df1, df2], axis=1)
+
+    return result_df
 
 
 

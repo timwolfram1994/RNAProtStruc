@@ -1,18 +1,27 @@
 Aufgaben/Fragen:
+
+
 - Vergleich von Atomebene und Aminosäureebene
+
+-- hiv1 atomebene mit intermol-bindungen
+-- hiv1 AS-ebene mit intermol bindungen
+
+
 - Readme erstellen
 
-- dataframe mit componenten-index, spalte mit kanten in komponente und den knoten dazu
 
-- UI tauschen zwischen generischen pebblegame und component detection
+
+
 
 - sortierte komponentenliste verwenden
 
 
-
+- dataframe mit componenten-index, spalte mit kanten in komponente und den knoten dazu (done)
 
 
 
 ####erledigt#####
 
 - Kanten als sets behandeln, damit Reihenfolge der Knoten keine Rolle spielt (done)
+
+- UI tauschen zwischen generischen pebblegame und component detection
