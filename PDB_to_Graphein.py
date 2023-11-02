@@ -144,7 +144,7 @@ def load_and_pebble(path):
 
     return component_list
 
-def find_components(G):
+def find_components(G,path):
 
     """performs 5,6 pebblegame based component-detection (Paper: lee and streinu)"""
 
@@ -173,18 +173,12 @@ def assign_components(G, components):
 
     d = {}
     for node in nodes:
+        d[node] = 0
         for idx, c in enumerate(components):
             for e in c:
                 if node in e:
-                    if node in d:
-                        if d[node] == 0:
-                            d[node] = idx + 1
-                            break
-                        elif len(c) > len(components[d[node] - 1]):
-                            d[node] = idx + 1
-                        break  # stop bcs nodes appear more often in same components
-                    else:
-                        d[node] = 0
+                    d[node] = idx + 1
+                    break
 
     d = sort_dict(d)
     nx.set_node_attributes(G, d, "component")
