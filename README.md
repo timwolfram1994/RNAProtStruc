@@ -1,5 +1,6 @@
-# RNAProtStruc
-project on rigidity in RNA and protein structures for Advanced Methods in Bioinformatics course
+# Detection of rigid Components in Graphs applied to Proteins
+
+Project on rigidity in RNA and protein structures for Advanced Methods in Bioinformatics course
 
 Thank you for using our little pebble and component-detection game tool!
 
@@ -16,12 +17,11 @@ Functions wrapping the rigid-component-detection and Protein-Graph building and 
 
 # A little introduction to the main functions of PDB_to_Graphein.py:
 
-## Load PDB-File and convert to Graph:
-
 pdb_to_graph(path, only_covalent=True, gran="atom")
 output: networkX MultiGraph
 
-- Setting only_covalent to False takes sidechain interactions such as H-bond or ionic interactions into account and makes them to edges
+- load PDB-file and converts to graph
+- setting only_covalent to False takes sidechain interactions such as H-bond or ionic interactions into account and makes them to edges
 - gran="atom" sets the atoms of the Protein to nodes. Change to gran="centroid" to set aminoacids as nodes.
 
 find_components(G, k=5, l=6):
