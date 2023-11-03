@@ -24,21 +24,11 @@ from graphein.protein.edges.distance import add_aromatic_interactions
 from graphein.protein.edges.distance import add_disulfide_interactions
 from graphein.protein.edges.distance import add_ionic_interactions
 
-'''22.09. Task: erstelle Dataframe oder PDB mit componente für jeden Knoten
-visualisiere Komponenten für Kanten und evtl. Knoten
-weitere Tasks: Disulfitbrücken, H-Brücken, Van-Der-Waals-Brücken'''
 
-
-
-params_to_change = {"granularity": "atom"}
-
-
-#oxy = pg.create5Ggraph(oxy)
-#pg.pebblegame(oxy,5,6)
 
 def sort_dict(original_dict):
 
-    """Helper-Function to bring the components in ascending order"""
+    """Helper-Function to bring the components in ascending order. Will be used in function assign_components"""
 
     # Extract the values and sort them
     sorted_values = sorted(set(original_dict.values()))
@@ -52,8 +42,11 @@ def sort_dict(original_dict):
     # Print the translated dictionary
     return translated_dict
 
+
 def refine_components(components):
 
+    """helper function to bring components in reasonable order, delete redundant components, will be used in
+    function print_component_dataframe"""
 
     components_to_remove = []
     # Iterate through the components and mark isolated components for removal
@@ -83,32 +76,9 @@ def refine_components(components):
     return components
 
 
-
-def pdb_to_graph(path, only_covalent=True, gran="atom"):
-
-    '''uses graphein to convert PDB-file to Graph'''
-    # decide if we construct edges only with covalent bonds or consider sidechain-interactions
-    if only_covalent == True:
-        params_to_change = {"granularity": gran, "edge_construction_functions": [add_atomic_edges]}
-    else:
-        params_to_change = {"granularity": "atom", "edge_construction_functions": [
-            add_hydrogen_bond_interactions,
-            add_aromatic_interactions,
-            add_disulfide_interactions,
-            add_ionic_interactions,
-            add_atomic_edges
-        ],
-                     "dssp_config": gp.DSSPConfig()
-                     }
-
-    config = ProteinGraphConfig(**params_to_change)
-    G = construct_graph(config=config, path=path)
-
-    return G
-
-
-
 def load_and_show(path):
+    """quickly loads a pdb-file and create an interactive plotly-visualization of the protein graph on atom-level
+    output: nx.MultiGraph"""
 
     params_to_change = {"granularity": "atom", "edge_construction_functions": [add_atomic_edges]}
     config = ProteinGraphConfig(**params_to_change)
@@ -126,52 +96,57 @@ def load_and_show(path):
     p.show()
     return G
 
-def load_and_pebble(path):
 
-    '''uses Graphein to convert PDB-File to networkX Graph. Then performs 5,6-Pebblegame.'''
+def pdb_to_graph(path, only_covalent=True, gran="atom"):
 
-    params_to_change = {"granularity": "atom", "edge_construction_functions": [add_atomic_edges]}
+    '''uses graphein to convert PDB-file to Graph. set gran to centroid to investigate protein on aminoacid level.
+    Set only_covalent to False to include sidechain-interactions.
+    output: nx.multiGraph'''
+
+    # decide if we construct edges only with covalent bonds or consider sidechain-interactions
+    if only_covalent == True:
+        params_to_change = {"granularity": gran, "edge_construction_functions": [add_atomic_edges]}
+    else:
+        params_to_change = {"granularity": gran, "edge_construction_functions": [
+            add_hydrogen_bond_interactions,
+            add_aromatic_interactions,
+            add_disulfide_interactions,
+            add_ionic_interactions,
+            add_atomic_edges
+        ],
+                     "dssp_config": gp.DSSPConfig()
+                     }
+
     config = ProteinGraphConfig(**params_to_change)
     G = construct_graph(config=config, path=path)
-    print(G)
-    G = pg.create5Ggraph(G)
-    component_list = pg.pebblegame(G,5,6)
 
-    # Open a text file in write mode and export the list
-    with open(os.path.basename(path).split('.')[0] + '.txt', 'w') as file:
-        for item in component_list:
-            file.write(str(item) + '\n')
+    return G
 
-    return component_list
 
-def find_components(G,path):
+def find_components(G, k=5, l=6):
 
-    """performs 5,6 pebblegame based component-detection (Paper: lee and streinu)"""
+    """performs 5,6 pebblegame based component-detection
+    output: list of rigid components"""
 
-    G = pg.create5Ggraph(G)
-    component_list = pg.pebblegame(G, 5, 6)
+    if k==5 and l==6:
+        G = pg.create5Ggraph(G)
 
-    with open(os.path.basename(path).split('.')[0] + '.txt', 'w') as file:
-        for item in component_list:
-            file.write(str(item) + '\n')
+    component_list = pg.pebblegame(G, k, l)
+    component_list = refine_components(component_list)
+    component_list = [[tuple(f) for f in s] for s in component_list]
 
     return component_list
 
 
 def assign_components(G, components):
 
-    """assigns components to nodes and edges"""
-
-    components = components
-
-    for com in components:
-        if len(com) == 1:
-            components.remove(com)
-    print(len(components))
+    """assigns components to nodes and edges as attributes.
+    needs as input the component list of find_components!
+    ouptput: graph with components as node attributes"""
 
     nodes = list(G.nodes)
-
     d = {}
+
     for node in nodes:
         d[node] = 0
         for idx, c in enumerate(components):
@@ -180,7 +155,7 @@ def assign_components(G, components):
                     d[node] = idx + 1
                     break
 
-    d = sort_dict(d)
+    #d = sort_dict(d)
     nx.set_node_attributes(G, d, "component")
 
     # Here we want to assign to each edge its component. If node is not in component we assign 0 to it.
@@ -198,7 +173,7 @@ def assign_components(G, components):
             else:
                 d[edge] = 0
 
-    d = sort_dict(d)
+    #d = sort_dict(d)
     nx.set_edge_attributes(G, d, name="component")
 
     return G
@@ -221,18 +196,14 @@ def print_component_dataframe(component_list):
     """creates dataframe out of components. one column with a list of nodes
     and one column with a list of edges"""
 
-    #component_list = [set([frozenset(edge) for edge in edge_list]) for edge_list in component_list]
-
-    components = refine_components(component_list)  # use the refine_components function
-    # convert the nested sets into nested lists
-    edge_components = [[list(edge) for edge in component] for component in components]
+    edge_components = [[list(edge) for edge in component] for component in component_list]
     # gib dict mit index= componente und value= Liste an Kanten
     edge_dict = {}
     for idx, component in enumerate(edge_components):
         edge_dict[idx + 1] = str(component)
 
     # gib dicts mit index=componente und value= Liste an Knoten
-    node_components = [set([item for sublist in inner_list for item in sublist]) for inner_list in components]
+    node_components = [set([item for sublist in inner_list for item in sublist]) for inner_list in component_list]
     node_dict = {}
     for idx, comp in enumerate(node_components):
         node_dict[idx + 1] = str(comp)

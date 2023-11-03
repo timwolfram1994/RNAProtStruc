@@ -1,21 +1,18 @@
 Aufgaben/Fragen:
 
---debuggen von print node attributes
---debuggen von print components
+- Readme erstellen
 
 - Vergleich von Atomebene und Aminosäureebene
 
--- hiv1 atomebene mit intermol-bindungen
--- hiv1 AS-ebene mit intermol bindungen
-
-
-- Readme erstellen
-
-- UI tauschen zwischen generischen pebblegame und component detection
 
 - rigidity matrix ausprobieren
 
 ### UI ###
+
+####Optional:
+
+-- hiv1 atomebene mit intermol-bindungen
+-- hiv1 AS-ebene mit intermol bindungen
 
 OPTIONS:
 
@@ -29,11 +26,8 @@ OPTIONS:
 
 
 
-
-
-
-
-
+###goldplating###
+Graphattribut Component als json exportieren
 
 
 ####erledigt#####
@@ -43,3 +37,9 @@ OPTIONS:
 - sortierte komponentenliste verwenden
 
 - dataframe mit componenten-index, spalte mit kanten in komponente und den knoten dazu (done)
+- UI tauschen zwischen generischen pebblegame und component detection
+
+###Beobachtungen###
+
+--print node attributes gibt nur noch components aus, was an sich ok ist, weil die später den knoten hinzugefügt werden können
+allerdings wäre es wohl besser eine json, statt einem df auszugeben

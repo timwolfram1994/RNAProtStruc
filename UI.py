@@ -27,6 +27,9 @@ if source == 'e':
 elif source == 'p':
     G = ptg.pdb_to_graph(path)
 
+
+#select procedure: b will run a basic pebblegame, c will run a rigid-component detection
+
 if procedure == 'b':
 
     print('A k,l-pebble game will be run. Specifiy k:')
@@ -47,10 +50,8 @@ elif procedure == 'c':
     print('Now please specify l:')
     l = int(input())
     # if we have a 5,6-pebblegame, we perform a 3D-rigidity test, so we have to multiply the edges by five
-    if k == 5 and l == 6:
-        G = pg.create5Ggraph(G)
 
-    components = pg.pebblegame(G, k, l)
+    components = ptg.find_components(G, k, l)
     G = ptg.assign_components(G, components)
     df = ptg.print_attributes(G)
     df.to_csv(os.path.basename(path).split('.')[0] + '_attributes' + '.csv')
