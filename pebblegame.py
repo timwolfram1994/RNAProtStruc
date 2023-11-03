@@ -161,7 +161,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         index_u = V.index(u)
         index_v = V.index(v)
         if component_matrix.at[u, v] == 1:
-            print("Edge already in rigid component identified")
+            #print("Edge already in rigid component identified")
             continue
 
         # edge acceptance: gather information on amount of pebbles and apply the DFS for pebble search,
