@@ -47,6 +47,27 @@ print_component_dataframe(component_list):
 - output: pandas dataframe with components as index and a column with nodes and one with edges contained in each component
 
 
+## Example Pipeline to perform a Component-Detection based on a PDB-File
+
+from graphein.protein.visualisation import plotly_protein_structure_graph
+
+import PDB_to_Graphein as pdg
+
+path = 'pdb_samples/2mgo.pdb'
+
+G = pdg.pdb_to_graph(path, only_covalent=False, gran="atom")
+
+comp = pdg.find_components(G)
+
+G = pdg.assign_components(G, comp)
+
+attr_df = pdg.print_attributes(G)
+
+comp_df = pdg.print_component_dataframe(comp)
+
+
+
+
   
 
 
