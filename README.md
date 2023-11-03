@@ -18,20 +18,23 @@ Functions wrapping the rigid-component-detection and Protein-Graph building and 
 # A little introduction to the main functions of PDB_to_Graphein.py:
 
 pdb_to_graph(path, only_covalent=True, gran="atom")
-output: networkX MultiGraph
+
+- output: networkX MultiGraph
 
 - load PDB-file and converts to graph
 - setting only_covalent to False takes sidechain interactions such as H-bond or ionic interactions into account and makes them to edges
 - gran="atom" sets the atoms of the Protein to nodes. Change to gran="centroid" to set aminoacids as nodes.
 
-find_components(G, k=5, l=6):
-output: List of components as sets containing the edges as frozen sets
+find_components(G, k=5, l=6)
+
+- output: List of components as sets containing the edges as frozen sets
 
 - performs k,l-pebblegame-based detection of rigid components
 - default k=5 and l=6 to perform a k,l-pebblegame for 3D protein Graphs
 
 assign_components(G, components)
-output: netwokX Multigraph with node-attibute component based on input components-list
+
+- output: netwokX Multigraph with node-attibute component based on input components-list
 
 - it makes only sense to use the components list as input which is generated based on the same graph as input of this function
 
@@ -39,7 +42,8 @@ print_attributes(G)
 output: pandas dataframe with the node attributes
 
 print component_dataframe(component_list):
-output: pandas dataframe with components as index and a column with nodes and one with edges contained in each component
+
+- output: pandas dataframe with components as index and a column with nodes and one with edges contained in each component
 
 
   
