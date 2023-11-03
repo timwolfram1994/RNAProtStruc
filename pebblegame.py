@@ -39,7 +39,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
     def dfs_gather_pebble(digraph: nx.MultiDiGraph, u, v):
         """A modified function for a DFS and path rearrangement, that stops immediately
-        after a pebble is found on a node to avoid unnessessary computational resources.
+        after a pebble is found on a node to avoid unnecessary computational resources.
         It returns the boolean true, if a pebble has been found and the whole reach of u,v otherwise."""
 
         # Initiation of the lists for visited notes (visited) and the
