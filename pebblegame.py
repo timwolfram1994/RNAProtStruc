@@ -146,11 +146,23 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
     # iterate in an arbitrary order over all nodes from G
     edges_to_insert = list(G.edges)
+    total_edges = len(edges_to_insert)
+    print("Performing the pebble game on ",total_edges,".","\n","This could take a while...")
 
     '''(For demonstration purposes the list of edges to insert should be shuffled to achieve a real arbitrary order. 
     Nevertheless, to avoid additional overhead for the algorithm, the code is here fore is marked out.'''
     # random.shuffle(edges_to_insert)
+
+    #Progress measurement
+    edges_done = 0
+    progress_counter = 1
     while edges_to_insert:
+        edges_done = edges_done +1
+        progress = edges_done/total_edges
+        if progress > (progress_counter/100):
+            print(progress_counter,"% done")
+            progress_counter = round((progress*100))
+
         # choose from an arbitrary edge of E(G) to be inserted.
         e = edges_to_insert.pop(-1)
 
@@ -288,6 +300,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                     component_edge = frozenset([node_i, node_j])
                     component_edges.add(component_edge)
             identified_components.append(set(component_edges))
+    print("100 % done", "\n")
     print("Result:")
     if total_pebbles == l:
         if len(D.edges) == len(G.edges):
