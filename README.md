@@ -21,7 +21,7 @@ pdb_to_graph(path, only_covalent=True, gran="atom")
 
 - output: networkX MultiGraph
 
-- load PDB-file and converts to graph
+- loads PDB-file and converts to graph
 - setting only_covalent to False takes sidechain interactions such as H-bond or ionic interactions into account and makes them to edges
 - gran="atom" sets the atoms of the Protein to nodes. Change to gran="centroid" to set aminoacids as nodes.
 
@@ -39,9 +39,10 @@ assign_components(G, components)
 - it makes only sense to use the components list as input which is generated based on the same graph as input of this function
 
 print_attributes(G)
-output: pandas dataframe with the node attributes
 
-print component_dataframe(component_list):
+- output: pandas dataframe with the node attributes
+
+print_component_dataframe(component_list):
 
 - output: pandas dataframe with components as index and a column with nodes and one with edges contained in each component
 
