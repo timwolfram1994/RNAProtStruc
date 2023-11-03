@@ -1,7 +1,7 @@
 import simple_test_samples
 import networkx as nx
 import pandas as pd
-
+import PDB_to_Graphein
 
 def create5Ggraph(multigraph1G):
     """based on molecular conjuncture, this function converts a (multigraph) into a 5G-Graph
@@ -280,25 +280,27 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                     component_edges.add(component_edge)
             identified_components.append(set(component_edges))
 
-    print("identified components: ", identified_components)
-
-    print("Component-Matrix:\n", identified_components)
     if total_pebbles == l:
+        print("Result:")
         if len(D.edges) == len(G.edges):
             print("well-constraint; l pebbles remain. no edge has been left out")
         else:
             print("over-constraint; l pebbles remain. ,", len(G.edges) - len(D.edges), "edges have been left out")
     elif total_pebbles > l:
+        print("Result:")
         if len(D.edges) == len(G.edges):
             print("under-constraint; ", total_pebbles, "pebbles remain. no edge has been left out")
         else:
             print("other: ", total_pebbles, "pebbles remain,", len(G.edges) - len(D.edges), "edges have been left out")
     else:
+        print("Result:")
         print("error!", total_pebbles, "pebbles remain")
+    print()
     print("Matrix of rigid components: \n", component_matrix)
-
+    print()
+    print("Components-List as sets of frozensets:\n", identified_components)
     return identified_components
 
 
 if __name__ == "__main__":
-    pebblegame(simple_test_samples.sample11_graph, 2, 3)
+    print((pebblegame(simple_test_samples.sample11_graph, 2, 3)))
