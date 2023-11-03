@@ -128,7 +128,7 @@ def find_components(G, k=5, l=6):
     """performs 5,6 pebblegame based component-detection
     output: list of rigid components"""
 
-    if k==5 and l==6:
+    if k == 5 and l == 6:
         G = pg.create5Ggraph(G)
 
     component_list = pg.pebblegame(G, k, l)
