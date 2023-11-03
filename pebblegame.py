@@ -3,6 +3,7 @@ import networkx as nx
 import pandas as pd
 import PDB_to_Graphein
 
+
 def create5Ggraph(multigraph1G):
     """based on molecular conjuncture, this function converts a (multigraph) into a 5G-Graph
      for pebble game application with a G^2 graph"""
@@ -26,6 +27,16 @@ def create5Ggraph(multigraph1G):
 
 
 def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
+    """The pebblegame function is based on the paper "Pebble game algorithms and sparse graphs"
+    by Audrey Lee and Ileana Streinu as appeared in Discrete Mathematics 308 (2008) 1425-1437).
+    It uses their Component Detection II - Algorithm to identify rigid components within a graph.
+
+    Output:
+    It returns every single identified component within a list of sets as frozensets and
+    prints them accordingly.
+    Furthermore the component matrix is printed, in which every edge,
+    that lies within a rigid component, is marked with a "1". """
+
     def dfs_gather_pebble(digraph: nx.MultiDiGraph, u, v):
         """A modified function for a DFS and path rearrangement, that stops immediately
         after a pebble is found on a node to avoid unnessessary computational resources.
@@ -120,8 +131,6 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                 to_visit.pop(-1)
         return visited
 
-    '''Definitions and initiations of datastructures, notated accordingly to "Pebble game algorithms and sparse graphs"
-    by Audrey Lee and Ileana Streinu as appeared in Discrete Mathematics 308 (2008) 1425-1437)'''
     # Definitions
     G = multiDiGraph
     D = nx.MultiDiGraph()
@@ -276,31 +285,27 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                     node_j = current_component[j]
                     component_matrix.at[node_i, node_j] = 1
                     component_matrix.at[node_j, node_i] = 1
-                    component_edge = frozenset([node_i,node_j])
+                    component_edge = frozenset([node_i, node_j])
                     component_edges.add(component_edge)
             identified_components.append(set(component_edges))
-
+    print("Result:")
     if total_pebbles == l:
-        print("Result:")
         if len(D.edges) == len(G.edges):
-            print("well-constraint; l pebbles remain. no edge has been left out")
+            print("well-constraint; l pebbles remain. no edge has been left out", "\n")
         else:
-            print("over-constraint; l pebbles remain. ,", len(G.edges) - len(D.edges), "edges have been left out")
+            print("over-constraint; l pebbles remain. ,", len(G.edges) - len(D.edges), "edges have been left out", "\n")
     elif total_pebbles > l:
-        print("Result:")
         if len(D.edges) == len(G.edges):
-            print("under-constraint; ", total_pebbles, "pebbles remain. no edge has been left out")
+            print("under-constraint; ", total_pebbles, "pebbles remain. no edge has been left out", "\n")
         else:
-            print("other: ", total_pebbles, "pebbles remain,", len(G.edges) - len(D.edges), "edges have been left out")
+            print("other: ", total_pebbles, "pebbles remain,", len(G.edges) - len(D.edges), "edges have been left out",
+                  "\n")
     else:
-        print("Result:")
-        print("error!", total_pebbles, "pebbles remain")
-    print()
-    print("Matrix of rigid components: \n", component_matrix)
-    print()
-    print("Components-List as sets of frozensets:\n", identified_components)
+        print("error!", total_pebbles, "pebbles remain", "\n")
+    print("Matrix of rigid components: \n", component_matrix, "\n")
+    print("List of all components identified:\n", [[tuple(f) for f in s] for s in identified_components])
     return identified_components
 
 
 if __name__ == "__main__":
-    print((pebblegame(simple_test_samples.sample11_graph, 2, 3)))
+    pebblegame(simple_test_samples.sample11_graph, 2, 3)
