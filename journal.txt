@@ -7,6 +7,8 @@ Aufgaben/Fragen:
 
 - rigidity matrix ausprobieren
 
+- Graphattribut Component als json exportieren
+
 ### UI ###
 
 ####Optional:
