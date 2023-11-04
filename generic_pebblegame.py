@@ -1,6 +1,9 @@
+import math
 import random
 import networkx as nx
+import PDB_to_Graphein
 import simple_test_samples
+
 
 def create5Ggraph(multigraph1G):
     """based on molecular conjuncture, this function converts a (multigraph) into a 5G-Graph
@@ -25,8 +28,6 @@ def create5Ggraph(multigraph1G):
 
 
 def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
-
-
     def dfs_gather_pebble(digraph: nx.MultiDiGraph, u, v):
         """A function for a DFS, that stops immediately after a pebble is found on a node
         # to avoid unnessessary computational resources. It returns the boolean true,
@@ -78,13 +79,31 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     D = nx.MultiDiGraph()
     D.add_nodes_from(G, pebbles=k)
     V = list(D.nodes)
-    total_pebbles = len(V) * k
+    remaining_pebbles = len(V) * k
 
     # iterate in an arbitrary order over all nodes from G
     edges_to_insert = list(G.edges)
     random.shuffle(edges_to_insert)
 
+    # Visualization of progress:
+    edges_done = 0
+    displayed_progress = 0
+    total_edges = len(edges_to_insert)
+    print("Performing the pebble game on ", total_edges, " edges.", "\n", "This could take a while...", "\n")
+    print("Progress:")
+    print("0  10  20  30  40  50  60  70  80  90  100%")
+
     while edges_to_insert:
+
+        # Progress measurement
+        # For every 2.5% progress in processed edges, an additional progress bar "-" is displayed.
+        edges_done = edges_done + 1
+        state = round(edges_done / total_edges, ndigits=3) * 100
+        progress = state - displayed_progress
+        additional_loading_bars = math.floor(progress / 2.5)
+        for i in range(additional_loading_bars):
+            print("-", sep='', end='', flush=True)
+            displayed_progress = displayed_progress + 2.5
 
         # wähle eine zufällige Kante aus Edges_to_insert aus, über den Index der Liste einzufügender Kanten
         e = edges_to_insert.pop(-1)
@@ -97,9 +116,9 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         (i.e. edge(u,v)| u = v) we hereby decide to leave this control structure out, 
         since there is no application herefore on molecule graphs with a 5,6 pebble game.'''
 
-#           Check if the edge is a loop (u == v): if so, continue with next edge
-#           if k <= l and u == v:
-#               continue
+        #           Check if the edge is a loop (u == v): if so, continue with next edge
+        #           if k <= l and u == v:
+        #               continue
 
         # edge acceptance: gather information on amount of pebbles and apply the DFS for pebble search,
         # if the sufficient amount of pebbles is not callable yet
@@ -139,27 +158,34 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
         # Edge Insertion: Check whether enough pebbles could be collected and if so, insert the edge into D.
         if peb_u + peb_v >= l + 1:
-            D.add_edge(e[0], e[1])
-            D.nodes[u]["pebbles"] = D.nodes[u]["pebbles"] - 1
-            peb_u = peb_u - 1
-            total_pebbles -= 1
+            remaining_pebbles -= 1
+            if peb_u > 0:
+                D.add_edge(e[0], e[1])
+                D.nodes[u]["pebbles"] = D.nodes[u]["pebbles"] - 1
+
+            else:
+                D.add_edge(e[1], e[0])
+                D.nodes[v]["pebbles"] = D.nodes[v]["pebbles"] - 1
 
         continue
 
-    if total_pebbles == l:
+    print("\n", "The pebblegame is finished.", "\n")
+    print("Result:")
+    if remaining_pebbles == l:
         if len(D.edges) == len(G.edges):
-            print("well-constraint; l pebbles remain. no edge has been left out")
+            print("well-constraint; l pebbles remain. no edge has been left out", "\n")
         else:
-            print("over-constraint; l pebbles remain.", len(G.edges) - len(D.edges), "edges have been left out")
-    elif total_pebbles > l:
+            print("over-constraint; l pebbles remain. ,", len(G.edges) - len(D.edges), "edges have been left out", "\n")
+    elif remaining_pebbles > l:
         if len(D.edges) == len(G.edges):
-            print("under-constraint; ", total_pebbles, "pebbles remain. no edge has been left out")
+            print("under-constraint; ", remaining_pebbles, "pebbles remain. no edge has been left out", "\n")
         else:
-            print("other: ", total_pebbles, "pebbles remain,", len(G.edges) - len(D.edges), "edges have been left out")
-    else:
-        print("error! This is result is not supposed to appear...", total_pebbles, "pebbles remain")
+            print("error! This is result is not supposed to appear...", remaining_pebbles, "pebbles remain,",
+                  len(G.edges) - len(D.edges), "edges have been left out",
+                  "\n")
 
 
 if __name__ == "__main__":
-    generic_pebblegame(simple_test_samples.sample10_graph, 2, 3)
-
+    protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/1ubq.pdb")
+    protein5G = create5Ggraph(protein)
+    generic_pebblegame(protein5G, 5, 6)

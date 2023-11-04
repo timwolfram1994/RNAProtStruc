@@ -2,6 +2,7 @@ import simple_test_samples
 import networkx as nx
 import pandas as pd
 import PDB_to_Graphein
+import math
 
 
 def create5Ggraph(multigraph1G):
@@ -131,14 +132,14 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                 to_visit.pop(-1)
         return visited
 
-    # Definitions
+    # Definitions and
+    # Initiation of directed pebble graph D with k pebbles and zero edges
     G = multiDiGraph
     D = nx.MultiDiGraph()
     D.add_nodes_from(G, pebbles=k)
     V = list(D.nodes)
-    total_pebbles = len(V) * k
+    remaining_pebbles = len(V) * k
     identified_components = []
-    # initiate directed pebble graph D with k pebbles and zero edges
 
     # initiate n x n matrix of all vertices to present identified components
     component_matrix = pd.DataFrame(columns=V, index=V)
@@ -146,22 +147,31 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
     # iterate in an arbitrary order over all nodes from G
     edges_to_insert = list(G.edges)
-    total_edges = len(edges_to_insert)
-    print("Performing the pebble game on ",total_edges,".","\n","This could take a while...")
 
     '''(For demonstration purposes the list of edges to insert should be shuffled to achieve a real arbitrary order. 
     Nevertheless, to avoid additional overhead for the algorithm, the code is here fore is marked out.'''
     # random.shuffle(edges_to_insert)
 
-    #Progress measurement
+    # Visualization of progress:
     edges_done = 0
-    progress_counter = 1
+    displayed_progress = 0
+    total_edges = len(edges_to_insert)
+    print("Performing the pebble game on ", total_edges, " edges.", "\n", "This could take a while...", "\n")
+    print("Progress:")
+    print("0  10  20  30  40  50  60  70  80  90  100%")
+
+    # Start of the pebble game. Beginning of the insertion of edges.
     while edges_to_insert:
-        edges_done = edges_done +1
-        progress = edges_done/total_edges
-        if progress > (progress_counter/100):
-            print(progress_counter,"% done")
-            progress_counter = round((progress*100))
+
+        # Progress measurement
+        # For every 2.5% progress in processed edges, an additional progress bar "-" is displayed.
+        edges_done = edges_done + 1
+        state = round(edges_done / total_edges, ndigits=3) * 100
+        progress = state - displayed_progress
+        additional_loading_bars = math.floor(progress / 2.5)
+        for i in range(additional_loading_bars):
+            print("-", sep='', end='', flush=True)
+            displayed_progress = displayed_progress + 2.5
 
         # choose from an arbitrary edge of E(G) to be inserted.
         e = edges_to_insert.pop(-1)
@@ -182,7 +192,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         index_u = V.index(u)
         index_v = V.index(v)
         if component_matrix.at[u, v] == 1:
-            #print("Edge already in rigid component identified")
+            # print("Edge already in rigid component identified")
             continue
 
         # edge acceptance: gather information on amount of pebbles and apply the DFS for pebble search,
@@ -224,11 +234,16 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         # Edge Insertion: Check whether enough pebbles could be collected and if so, insert the edge into D.
         edge_inserted = False
         if peb_u + peb_v >= l + 1:
-            D.add_edge(e[0], e[1])
-            D.nodes[u]["pebbles"] = D.nodes[u]["pebbles"] - 1
-            peb_u = peb_u - 1
-            total_pebbles -= 1
+            remaining_pebbles -= 1
             edge_inserted = True
+            if peb_u > 0:
+                D.add_edge(e[0], e[1])
+                D.nodes[u]["pebbles"] = D.nodes[u]["pebbles"] - 1
+                peb_u = peb_u - 1
+            else:
+                D.add_edge(e[1], e[0])
+                D.nodes[v]["pebbles"] = D.nodes[v]["pebbles"] - 1
+                peb_v = peb_v - 1
 
         if not edge_inserted:
             continue
@@ -300,25 +315,29 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                     component_edge = frozenset([node_i, node_j])
                     component_edges.add(component_edge)
             identified_components.append(set(component_edges))
-    print("100 % done", "\n")
+    print("\n", "The pebblegame is finished.", "\n")
     print("Result:")
-    if total_pebbles == l:
+    if remaining_pebbles == l:
         if len(D.edges) == len(G.edges):
             print("well-constraint; l pebbles remain. no edge has been left out", "\n")
         else:
             print("over-constraint; l pebbles remain. ,", len(G.edges) - len(D.edges), "edges have been left out", "\n")
-    elif total_pebbles > l:
+    elif remaining_pebbles > l:
         if len(D.edges) == len(G.edges):
-            print("under-constraint; ", total_pebbles, "pebbles remain. no edge has been left out", "\n")
+            print("under-constraint; ", remaining_pebbles, "pebbles remain. no edge has been left out", "\n")
         else:
-            print("other: ", total_pebbles, "pebbles remain,", len(G.edges) - len(D.edges), "edges have been left out",
+            print("error! This is result is not supposed to appear...", remaining_pebbles, "pebbles remain,",
+                  len(G.edges) - len(D.edges), "edges have been left out",
                   "\n")
     else:
-        print("error!", total_pebbles, "pebbles remain", "\n")
+        print("error!", remaining_pebbles, "pebbles remain", "\n")
     print("Matrix of rigid components: \n", component_matrix, "\n")
     print("List of all components identified:\n", [[tuple(f) for f in s] for s in identified_components])
     return identified_components
 
 
 if __name__ == "__main__":
-    pebblegame(simple_test_samples.sample11_graph, 2, 3)
+    # pebblegame(simple_test_samples.sample11_graph,2,3)
+    protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/1ubq.pdb")
+    protein5G = create5Ggraph(protein)
+    pebblegame(protein5G, 5, 6)
