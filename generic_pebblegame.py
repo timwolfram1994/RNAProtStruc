@@ -28,6 +28,11 @@ def create5Ggraph(multigraph1G):
 
 
 def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
+    """The pebblegame function is based on the paper "Pebble game algorithms and sparse graphs"
+        by Audrey Lee and Ileana Streinu as appeared in Discrete Mathematics 308 (2008) 1425-1437).
+        Output: It returns a print-statement, on if the graph is over-, under-, or well-constrained
+         is something else (other)"""
+
     def dfs_gather_pebble(digraph: nx.MultiDiGraph, u, v):
         """A function for a DFS, that stops immediately after a pebble is found on a node
         # to avoid unnessessary computational resources. It returns the boolean true,
@@ -153,23 +158,25 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
                 if dfs_v == True:
                     peb_v = peb_v + 1
 
-            if dfs_u != True and dfs_v != True:
+            if dfs_u is not True and dfs_v is not True:
                 break
 
         # Edge Insertion: Check whether enough pebbles could be collected and if so, insert the edge into D.
         if peb_u + peb_v >= l + 1:
             remaining_pebbles -= 1
+            edge_inserted = True
             if peb_u > 0:
                 D.add_edge(e[0], e[1])
                 D.nodes[u]["pebbles"] = D.nodes[u]["pebbles"] - 1
-
+                peb_u = peb_u - 1
             else:
                 D.add_edge(e[1], e[0])
                 D.nodes[v]["pebbles"] = D.nodes[v]["pebbles"] - 1
+                peb_v = peb_v - 1
 
         continue
 
-    print("\n", "The pebblegame is finished.", "\n")
+    print("\n", "The generic pebblegame is finished.", "\n")
     print("Result:")
     if remaining_pebbles == l:
         if len(D.edges) == len(G.edges):
@@ -186,6 +193,7 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
 
 if __name__ == "__main__":
-    protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/1ubq.pdb")
-    protein5G = create5Ggraph(protein)
-    generic_pebblegame(protein5G, 5, 6)
+    generic_pebblegame(simple_test_samples.sample10_graph, 2, 3)
+    # protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/1ubq.pdb")
+    # protein5G = create5Ggraph(protein)
+    # pebblegame(protein5G, 5, 6)
