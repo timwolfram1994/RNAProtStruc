@@ -1,9 +1,8 @@
-import simple_test_samples
+from sample_gaphs_for_testing import simple_test_samples
 import networkx as nx
 import pandas as pd
-import PDB_to_Graphein
 import math
-
+import PDB_to_Graphein
 
 def create5Ggraph(multigraph1G):
     """based on molecular conjuncture, this function converts a (multigraph) into a 5G-Graph
@@ -133,6 +132,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             except StopIteration:
                 to_visit.pop(-1)
         return visited
+
 
     # Definitions and
     # Initiation of directed pebble graph D with k pebbles and zero edges
@@ -328,7 +328,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         if len(D.edges) == len(G.edges):
             print("under-constraint; ", remaining_pebbles, "pebbles remain. no edge has been left out", "\n")
         else:
-            print("error! This is result is not supposed to appear...", remaining_pebbles, "pebbles remain,",
+            print("other", remaining_pebbles, "pebbles remain,",
                   len(G.edges) - len(D.edges), "edges have been left out",
                   "\n")
     else:
@@ -339,7 +339,10 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
 
 if __name__ == "__main__":
-    pebblegame(simple_test_samples.sample10_graph,2,3)
-    # protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/1ubq.pdb")
-    # protein5G = create5Ggraph(protein)
-    # pebblegame(protein5G, 5, 6)
+    # pebblegame(simple_test_samples.sample10_graph, 2, 3)
+    protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/2mgo.pdb")
+    protein5G = create5Ggraph(protein)
+    pebblegame(protein5G, 5, 6)
+    protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/1ubq.pdb")
+    protein5G = create5Ggraph(protein)
+    pebblegame(protein5G, 5, 6)

@@ -1,8 +1,9 @@
 import math
 import random
 import networkx as nx
+from sample_gaphs_for_testing import simple_test_samples
 import PDB_to_Graphein
-import simple_test_samples
+
 
 
 def create5Ggraph(multigraph1G):
@@ -22,7 +23,7 @@ def create5Ggraph(multigraph1G):
 
     # create a sober edge list and the correct 5G Graph by only including the maximum 6 edges between two nodes
     edgelist5G = [x for x in listofedges if x[2] < 6]
-    multigraph5G = nx.MultiGraph(edgelist5G)
+    multigraph5G = nx.MultiDiGraph(edgelist5G)
 
     return multigraph5G
 
@@ -78,6 +79,8 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
     '''Definitions and initiations of datastructures, notated accordingly to "Pebble game algorithms and sparse graphs"
     by Audrey Lee and Ileana Streinu as appeared in Discrete Mathematics 308 (2008) 1425-1437)'''
+
+
 
     # initiate directed pebble graph D with k pebbles and zero edges
     G = multiDiGraph
@@ -187,13 +190,14 @@ def generic_pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
         if len(D.edges) == len(G.edges):
             print("under-constraint; ", remaining_pebbles, "pebbles remain. no edge has been left out", "\n")
         else:
-            print("error! This is result is not supposed to appear...", remaining_pebbles, "pebbles remain,",
+            print("other", remaining_pebbles, "pebbles remain,",
                   len(G.edges) - len(D.edges), "edges have been left out",
                   "\n")
-
+    else:
+        print("error!", remaining_pebbles, "pebbles remain", "\n")
 
 if __name__ == "__main__":
-    generic_pebblegame(simple_test_samples.sample10_graph, 2, 3)
-    # protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/1ubq.pdb")
-    # protein5G = create5Ggraph(protein)
-    # pebblegame(protein5G, 5, 6)
+    # generic_pebblegame(simple_test_samples.sample10_graph, 2, 3)
+    protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/1ubq.pdb")
+    protein5G = create5Ggraph(protein)
+    generic_pebblegame(protein5G, 5, 6)
