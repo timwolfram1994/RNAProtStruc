@@ -66,3 +66,27 @@ sample10_graph = nx.from_edgelist(sample10)
 sample11 = [("A", "B"), ("B", "C"), ("C", "D"),("A","C"),("B","D"), ("D", "E"), ("E", "F"), ("D", "F"), ("D", "G"), ("F", "G"), ("C", "J"),
             ("G", "H"), ("J", "H"), ("H", "I"), ("I", "J")]
 sample11_graph = nx.from_edgelist(sample11)
+
+# Define the vertices of the tetrahedron with explicit positions
+
+sample12_graph = nx.Graph()
+
+sample12_graph.add_nodes_from([
+
+    ('A', {"pos": (1, 1, 1)}),
+    ('B', {"pos": (1, -1, -1)}),
+    ('C', {"pos": (-1, 1, -1)}),
+    ('D', {"pos": (-1, -1, 1)}),
+
+])
+
+# Define the edges of the tetrahedron
+edges = [('A', 'B'), ('A', 'C'), ('A', 'D'),
+         ('B', 'C'), ('B', 'D'),
+         ('C', 'D')]
+
+# Add edges to the graph
+sample12_graph.add_edges_from(edges)
+
+print(sample12_graph)
+

@@ -96,7 +96,7 @@ if __name__ == "__main__":
     # Add edges to the graph
     G.add_edges_from(edges)
 
-    rigidity_test(G)
+    rigidity_matrix(G)
 
 
     # Define the vertices of the tetrahedron with explicit positions
