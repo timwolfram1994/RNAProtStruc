@@ -12,6 +12,7 @@ import logging
 import networkx as nx
 import matplotlib.pyplot as plt
 import graphein.protein as gp
+
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 logging.getLogger("graphein").setLevel(logging.INFO)
 from graphein.protein.config import ProteinGraphConfig
@@ -25,9 +26,7 @@ from graphein.protein.edges.distance import add_disulfide_interactions
 from graphein.protein.edges.distance import add_ionic_interactions
 
 
-
 def sort_dict(original_dict):
-
     """Helper-Function to bring the components in ascending order. Will be used in function assign_components"""
 
     # Extract the values and sort them
@@ -44,36 +43,42 @@ def sort_dict(original_dict):
 
 
 def refine_components(components):
-
     """helper function to bring components in reasonable order, delete redundant components, will be used in
     function print_component_dataframe"""
 
-    components_to_remove = []
-    # Iterate through the components and mark isolated components for removal
-    for i in range(len(components)):
+    unwanted_components = []
+    component_updated = False
+
+    for i in range(len(components) - 1):
+        component_updated = False
         if len(components[i]) == 1:
-            components_to_remove.append(i)
-
-    # Iterate through the components to merge connected components
-    for i in range(len(components) - 1, -1, -1):
-        if i in components_to_remove:
             continue
-
-        for j in range(i - 1, -1, -1):
-            if j in components_to_remove:
-                continue
-
-            for edge in components[i]:
-                if edge in components[j]:
-                    components[j].update(components[i])
-                    components_to_remove.append(i)
+        else:
+            for j in range(i + 1, len(components)):
+                if len(components[j]) == 1:
+                    continue
+                for edge in components[i]:
+                    if edge in components[j]:
+                        # print("comp_i_before:", components[i])
+                        # print("comp_j_before:", components[j])
+                        components[j].update(components[i])
+                        # print(components[j])
+                        unwanted_components.append(components[i])
+                        component_updated = True
+                        break
+                if component_updated is True:
                     break
 
-    # Remove the marked components
-    for i in sorted(components_to_remove, reverse=True):
-        components.pop(i)
+    components_filtered = []
+    for component in components:
+        if len(component) > 1:
+            if component in unwanted_components:
+                unwanted_components.remove(component)
+                continue
 
-    return components
+            components_filtered.append(component)
+
+    return components_filtered
 
 
 def load_and_show(path):
@@ -98,7 +103,6 @@ def load_and_show(path):
 
 
 def pdb_to_graph(path, only_covalent=True, gran="atom"):
-
     '''uses graphein to convert PDB-file to Graph. set gran to centroid to investigate protein on aminoacid level.
     Set only_covalent to False to include sidechain-interactions.
     output: nx.multiGraph'''
@@ -114,8 +118,8 @@ def pdb_to_graph(path, only_covalent=True, gran="atom"):
             add_ionic_interactions,
             add_atomic_edges
         ],
-                     "dssp_config": gp.DSSPConfig()
-                     }
+                            "dssp_config": gp.DSSPConfig()
+                            }
 
     config = ProteinGraphConfig(**params_to_change)
     G = construct_graph(config=config, path=path)
@@ -124,7 +128,6 @@ def pdb_to_graph(path, only_covalent=True, gran="atom"):
 
 
 def find_components(G, k=5, l=6):
-
     """performs 5,6 pebblegame based component-detection
     output: list of rigid components"""
 
@@ -139,7 +142,6 @@ def find_components(G, k=5, l=6):
 
 
 def assign_components(G, components):
-
     """assigns components to nodes and edges as attributes.
     needs as input the component list of find_components!
     ouptput: graph with components as node attributes"""
@@ -155,7 +157,7 @@ def assign_components(G, components):
                     d[node] = idx + 1
                     break
 
-    #d = sort_dict(d)
+    # d = sort_dict(d)
     nx.set_node_attributes(G, d, "component")
 
     # Here we want to assign to each edge its component. If node is not in component we assign 0 to it.
@@ -173,15 +175,13 @@ def assign_components(G, components):
             else:
                 d[edge] = 0
 
-    #d = sort_dict(d)
+    # d = sort_dict(d)
     nx.set_edge_attributes(G, d, name="component")
 
     return G
 
 
-
 def print_attributes(G):
-
     """returns a dataframe of the node attributes"""
 
     # Get the node attributes as a dictionary
@@ -193,7 +193,6 @@ def print_attributes(G):
 
 
 def print_component_dataframe(component_list):
-
     """creates dataframe out of components. one column with a list of nodes
     and one column with a list of edges"""
 
@@ -217,5 +216,3 @@ def print_component_dataframe(component_list):
     result_df = pd.concat([df1, df2], axis=1)
 
     return result_df
-
-

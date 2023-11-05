@@ -340,9 +340,12 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
 if __name__ == "__main__":
     # pebblegame(simple_test_samples.sample10_graph, 2, 3)
-    protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/2mgo.pdb")
-    protein5G = create5Ggraph(protein)
-    pebblegame(protein5G, 5, 6)
-    protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/1ubq.pdb")
-    protein5G = create5Ggraph(protein)
-    pebblegame(protein5G, 5, 6)
+    # protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/2mgo.pdb")
+    # protein5G = create5Ggraph(protein)
+    # pebblegame(protein5G, 5, 6)
+    # protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/1ubq.pdb")
+    # protein5G = create5Ggraph(protein)
+    # pebblegame(protein5G, 5, 6)
+    tedraeder5G = create5Ggraph(simple_test_samples.sample12_graph)
+    print(pebblegame(tedraeder5G, 5, 6))
+

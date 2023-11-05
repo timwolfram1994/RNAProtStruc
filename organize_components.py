@@ -1,46 +1,78 @@
-components_sample11 = [{frozenset({'H', 'I'})}, {frozenset({'J', 'I'})},
-              {frozenset({'H', 'I'}), frozenset({'J', 'I'}), frozenset({'H', 'J'})}, {frozenset({'H', 'G'})},
-              {frozenset({'G', 'F'})}, {frozenset({'E', 'F'})}, {frozenset({'D', 'G'})},
-              {frozenset({'G', 'F'}), frozenset({'D', 'F'}), frozenset({'D', 'G'})},
-              {frozenset({'E', 'G'}), frozenset({'E', 'F'}), frozenset({'D', 'F'}), frozenset({'D', 'G'}),
-               frozenset({'E', 'D'}), frozenset({'G', 'F'})}, {frozenset({'J', 'C'})}, {frozenset({'C', 'D'})},
-              {frozenset({'D', 'B'})}, {frozenset({'D', 'B'}), frozenset({'C', 'D'}), frozenset({'C', 'B'})},
-              {frozenset({'A', 'C'})},
-              {frozenset({'A', 'B'}), frozenset({'D', 'B'}), frozenset({'C', 'D'}), frozenset({'A', 'C'}),
-               frozenset({'A', 'D'}), frozenset({'C', 'B'})}]
+import components_json.HIV_components
 
 
-def organize_components(components:list):
+def organize_components(components: list):
+    unwanted_components = []
+    component_updated = False
 
-    components_to_remove = []
-    # Iterate through the components and mark isolated components for removal
-    for i in range(len(components)):
+    for i in range(len(components) - 1):
+        component_updated = False
         if len(components[i]) == 1:
-            components_to_remove.append(i)
-
-    # Iterate through the components to merge connected components
-    for i in range(len(components) - 1, -1, -1):
-        if i in components_to_remove:
             continue
-
-        for j in range(i - 1, -1, -1):
-            if j in components_to_remove:
-                continue
-
-            for edge in components[i]:
-                if edge in components[j]:
-                    components[j].update(components[i])
-                    components_to_remove.append(i)
+        else:
+            for j in range(i + 1, len(components)):
+                if len(components[j]) == 1:
+                    continue
+                for edge in components[i]:
+                    if edge in components[j]:
+                        # print("comp_i_before:", components[i])
+                        # print("comp_j_before:", components[j])
+                        components[j].update(components[i])
+                        # print(components[j])
+                        unwanted_components.append(components[i])
+                        component_updated = True
+                        break
+                if component_updated is True:
                     break
 
-    # Remove the marked components
-    for i in sorted(components_to_remove, reverse=True):
-        components.pop(i)
+    components_filtered = []
+    for component in components:
+        if len(component) > 1:
+            if component in unwanted_components:
+                unwanted_components.remove(component)
+                continue
 
-    return components
+            components_filtered.append(component)
+
+    return components_filtered
+
 
 if __name__ == "__main__":
-    organized = organize_components(components_sample11)
+    sets = [{frozenset({'A', 'B'}), frozenset({'B', 'C'})},  # 1
+
+            {frozenset({'B', 'C'})},  # 2
+
+            {frozenset({'B', 'D'}), frozenset({'E', 'F'}), frozenset({'Y', 'Z'})},  # 3
+
+            {frozenset({'F', 'G'})},  # 4
+
+            {frozenset({'H', 'D'}), frozenset({'B', 'A'}),
+             frozenset({'F', 'I'})},  # 5 (enhält 1)
+
+            {frozenset({'D', 'H'}), frozenset({'B', 'A'}), frozenset({'I', 'F'}),
+             frozenset({'F', 'E'})}
+
+            ]
+
+    sets2 = [{frozenset({'A', 'B'}), frozenset({'B', 'C'})},  # 1
+
+             {frozenset({'B', 'C'})},  # 2
+
+             {frozenset({'B', 'D'}), frozenset({'E', 'F'})},  # 3
+
+             {frozenset({'F', 'G'}), frozenset({'B', 'F'})},  # 4
+
+             {frozenset({'H', 'D'}), frozenset({'B', 'A'}),
+              frozenset({'F', 'I'})},  # 5 (enhält 1)
+
+             {frozenset({'D', 'H'}), frozenset({'B', 'A'}),
+              frozenset({'I', 'F'}), frozenset({'F', 'E'})},
+
+             {frozenset({'F', 'B'}), frozenset({'C', 'X'}),
+              frozenset({'T', 'F'}), frozenset({'F', 'Q'})}]
+
+    organized = organize_components(sets2)
     for component in organized:
         print(component)
+
 

@@ -1,5 +1,5 @@
 import networkx as nx
-
+import matplotlib.pyplot as plt
 '''Samples for Testing of the generic- and the component pebble game'''
 
 '''01. well-constraint-Beispiel (figure_3a) aus Li-Streinu-Paper für 3,3 Pebblegame:'''
@@ -48,45 +48,36 @@ sample07_graph = nx.from_edgelist(sample07)
 
 '''08. under-constraint-Beispiel (test-sample No 07 mit zusätzlichem Knoten und einzelner Kante zu diesem) für 2,3 Pebble Game'''
 sample08 = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "E"), ("E", "F"), ("F", "A"), ("A", "G"), ("B", "H"), ("C", "H"),
-            ("D", "H"), ("E", "G"), ("F", "G"), ("G", "H"),("A","I")]
+            ("D", "H"), ("E", "G"), ("F", "G"), ("G", "H"), ("A", "I")]
 sample08_graph = nx.from_edgelist(sample08)
-
 
 '''09. well-constraint-Beispiel (test-sample No 08 mit zusätzlicher Kante zu Knoten "I") für 2,3 Pebble Game'''
 sample09 = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "E"), ("E", "F"), ("F", "A"), ("A", "G"), ("B", "H"), ("C", "H"),
-            ("D", "H"), ("E", "G"), ("F", "G"), ("G", "H"),("A","I"),("B","I")]
+            ("D", "H"), ("E", "G"), ("F", "G"), ("G", "H"), ("A", "I"), ("B", "I")]
 sample09_graph = nx.from_edgelist(sample09)
 
 '''10. over-constraint-Beispiel (test-sample No 09 mit zusätzlicher Kante) für 2,3 Pebble Game'''
 sample10 = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "E"), ("E", "F"), ("F", "A"), ("A", "G"), ("B", "H"), ("C", "H"),
-            ("D", "H"), ("E", "G"), ("F", "G"), ("G", "H"),("A","I"),("B","I"),("C","I")]
+            ("D", "H"), ("E", "G"), ("F", "G"), ("G", "H"), ("A", "I"), ("B", "I"), ("C", "I")]
 sample10_graph = nx.from_edgelist(sample10)
 
 '''11. under-constraint-Beispiel (test-sample aus 3 seperaten Komponenten) für 2,3 Pebble Game'''
-sample11 = [("A", "B"), ("B", "C"), ("C", "D"),("A","C"),("B","D"), ("D", "E"), ("E", "F"), ("D", "F"), ("D", "G"), ("F", "G"), ("C", "J"),
+sample11 = [("A", "B"), ("B", "C"), ("C", "D"), ("A", "C"), ("B", "D"), ("D", "E"), ("E", "F"), ("D", "F"), ("D", "G"),
+            ("F", "G"), ("C", "J"),
             ("G", "H"), ("J", "H"), ("H", "I"), ("I", "J")]
 sample11_graph = nx.from_edgelist(sample11)
+
+'''12. well-constraint-Beispiel (tetrahedron) für 2,3 Pebble Game'''
 
 # Define the vertices of the tetrahedron with explicit positions
 
 sample12_graph = nx.Graph()
+sample12 = [('A', 'B'), ('A', 'C'), ('A', 'D'), ('B', 'C'), ('B', 'D'), ('C', 'D')]
+sample12_graph.add_nodes_from([('A', {"pos": (1, 1, 1)}),
+                               ('B', {"pos": (1, -1, -1)}),
+                               ('C', {"pos": (-1, 1, -1)}),
+                               ('D', {"pos": (-1, -1, 1)}),
+                               ])
 
-sample12_graph.add_nodes_from([
-
-    ('A', {"pos": (1, 1, 1)}),
-    ('B', {"pos": (1, -1, -1)}),
-    ('C', {"pos": (-1, 1, -1)}),
-    ('D', {"pos": (-1, -1, 1)}),
-
-])
-
-# Define the edges of the tetrahedron
-edges = [('A', 'B'), ('A', 'C'), ('A', 'D'),
-         ('B', 'C'), ('B', 'D'),
-         ('C', 'D')]
-
-# Add edges to the graph
-sample12_graph.add_edges_from(edges)
-
-print(sample12_graph)
+sample12_graph.add_edges_from(sample12)
 
