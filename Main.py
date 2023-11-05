@@ -6,8 +6,11 @@ path = 'pdb_samples/2mgo.pdb'
 G = pdg.pdb_to_graph(path, only_covalent=False)
 comp = pdg.find_components(G)
 G = pdg.assign_components(G, comp)
-attr_df = pdg.print_attributes(G)
-comp_df = pdg.print_component_dataframe(comp)
+
+
+#attr_df = pdg.print_attributes(G)
+
+#comp_df = pdg.print_component_dataframe(comp)
 
 
 
