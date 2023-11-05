@@ -1,8 +1,11 @@
+import json
+
 from sample_gaphs_for_testing import simple_test_samples
 import networkx as nx
 import pandas as pd
 import math
 import PDB_to_Graphein
+
 
 def create5Ggraph(multigraph1G):
     """based on molecular conjuncture, this function converts a (multigraph) into a 5G-Graph
@@ -132,7 +135,6 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
             except StopIteration:
                 to_visit.pop(-1)
         return visited
-
 
     # Definitions and
     # Initiation of directed pebble graph D with k pebbles and zero edges
@@ -339,13 +341,11 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
 
 
 if __name__ == "__main__":
-    # pebblegame(simple_test_samples.sample10_graph, 2, 3)
-    # protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/2mgo.pdb")
-    # protein5G = create5Ggraph(protein)
-    # pebblegame(protein5G, 5, 6)
-    # protein = PDB_to_Graphein.pdb_to_graph("pdb_samples/1ubq.pdb")
-    # protein5G = create5Ggraph(protein)
-    # pebblegame(protein5G, 5, 6)
-    tedraeder5G = create5Ggraph(simple_test_samples.sample12_graph)
-    print(pebblegame(tedraeder5G, 5, 6))
+    Myoglobin = PDB_to_Graphein.pdb_to_graph("pdb_samples/7vdn_Myoglobin_SpermWhale_CrystalStructure.pdb",
+                                             only_covalent=False)
+    Myoglobin5G = create5Ggraph(Myoglobin)
+    pebblegame(Myoglobin5G, 5, 6)
+    components_Spermwhale = pebblegame(Myoglobin5G, 5, 6)
 
+    with open("components_json/Myoglobin_Spermwhale.json", "w") as outfile:
+        json.dump(components_Spermwhale,)
