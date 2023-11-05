@@ -1,4 +1,5 @@
 import networkx as nx
+import matplotlib.pyplot as plt
 
 '''Samples for Testing of the generic- and the component pebble game'''
 
@@ -88,5 +89,5 @@ edges = [('A', 'B'), ('A', 'C'), ('A', 'D'),
 # Add edges to the graph
 sample12_graph.add_edges_from(edges)
 
-print(sample12_graph)
+
 

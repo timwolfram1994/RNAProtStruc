@@ -20,6 +20,8 @@ def rigidity_matrix(G):
                     row.append(G.nodes[node]['pos'][i] - G.nodes[edge[edge.index(node) - 1]]['pos'][i])
             else:
                 row.append(0)
+                row.append(0)
+                row.append(0)
         R.append(row)
 
     R = np.array(R)
@@ -42,64 +44,12 @@ def rigidity_matrix(G):
 
 
 if __name__ == "__main__":
+
+
+
+    # create tetrahedron
+
     G = nx.Graph()
-
-    # Füge Knoten mit 3D-Positionen hinzu
-    G.add_node(1, pos=(0, 0, 0))
-    G.add_node(2, pos=(1, 0, 0))
-    G.add_node(3, pos=(0.5, 0.866, 0))  # 3D-Position für Knoten 3
-
-    # Füge Kanten hinzu, um den Graphen zu verbinden
-    G.add_edge(1, 2)
-    G.add_edge(2, 3)
-    G.add_edge(3, 1)
-
-    rigidity_matrix(G)
-
-
-    G = nx.MultiGraph()
-
-    # Add nodes
-    G.add_node(1, pos=(0, 0, 0)) #nodes need to have a position in 3D-space
-    G.add_node(2, pos=(1, 0, 0))
-    G.add_node(3, pos=(0, 1, 0))
-
-    # Add edges
-    G.add_edge(1, 2)
-    G.add_edge(1, 3)
-    G.add_edge(2, 3)
-
-    rigidity_matrix(G)
-
-    # Create a Octahedron
-    G = nx.Graph()
-
-    # Define the vertices of the octahedron
-    vertices = {
-        'A': (0, 0, 1),
-        'B': (0, 0, -1),
-        'C': (1, 0, 0),
-        'D': (-1, 0, 0),
-        'E': (0, 1, 0),
-        'F': (0, -1, 0),
-    }
-
-    # Add vertices to the graph
-    G.add_nodes_from(vertices)
-
-    # Define the edges of the octahedron
-    edges = [('A', 'C'), ('A', 'D'), ('A', 'E'), ('A', 'F'),
-             ('B', 'C'), ('B', 'D'), ('B', 'E'), ('B', 'F'),
-             ('C', 'E'), ('C', 'F'),
-             ('D', 'E'), ('D', 'F')]
-
-    # Add edges to the graph
-    G.add_edges_from(edges)
-
-    rigidity_matrix(G)
-
-
-    # Define the vertices of the tetrahedron with explicit positions
 
     G.add_nodes_from([
 
@@ -123,5 +73,34 @@ if __name__ == "__main__":
     #print(G.nodes['A']['pos'])
     #print(nx.get_node_attributes(G, "pos"))
 
+    rigidity_matrix(G)
+
+    ###OCTAHEDRON###
+
+    G = nx.Graph()
+
+    # Add nodes with specified positions
+    G.add_nodes_from([
+        ('A', {"pos": (0, 0, 1)}),
+        ('B', {"pos": (0, 0, -1)}),
+        ('C', {"pos": (1, 0, 0)}),
+        ('D', {"pos": (-1, 0, 0)}),
+        ('E', {"pos": (0, 1, 0)}),
+        ('F', {"pos": (0, -1, 0)}),
+    ])
+
+    # Define the edges of the octahedron
+    edges = [
+        ('A', 'C'), ('A', 'D'), ('A', 'E'),
+        ('B', 'C'), ('B', 'D'), ('B', 'E'),
+        ('C', 'F'), ('D', 'F'), ('Aq', 'F'),
+        ('C', 'E'), ('B', 'F'), ('C', 'D')
+    ]
+
+    # Add edges to the graph
+    G.add_edges_from(edges)
+
+    print('Test Octahedron:')
+    print(G)
     rigidity_matrix(G)
 
