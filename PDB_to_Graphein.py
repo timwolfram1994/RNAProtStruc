@@ -182,6 +182,7 @@ def assign_components(G, components):
 
 def print_attributes(G):
 
+    """returns a dataframe of the node attributes"""
 
     # Get the node attributes as a dictionary
     node_attributes = dict(G.nodes(data=True))
@@ -216,23 +217,5 @@ def print_component_dataframe(component_list):
     result_df = pd.concat([df1, df2], axis=1)
 
     return result_df
-
-
-
-
-if __name__ == "__main__":
-
-    path = "pdb_samples/2mgo.pdb"
-    #G = load_and_show(path)
-    components = load_and_pebble(path)
-    G = pdb_to_graph(path, only_covalent=True)
-    G = assign_components(G, components)
-    df = print_attributes(G)
-    df.to_csv('node_attributes/' + os.path.basename(path).split('.')[0] +'.csv', index=False)
-
-    # Print node attributes
-    '''for node in G.nodes():
-        attributes = G.nodes[node]
-        print(f"Node {node} attributes: {attributes}")'''
 
 

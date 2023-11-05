@@ -36,7 +36,7 @@ def pebblegame(multiDiGraph: nx.MultiDiGraph, k, l):
     is something else (other).
     It returns every single identified component within a list of sets as frozensets and
     prints them accordingly.
-    Furthermore, the component matrix is printed, in which every edge,
+    Furthermore the component matrix is printed, in which every edge,
     that lies within a rigid component, is marked with a "1". """
 
     def dfs_gather_pebble(digraph: nx.MultiDiGraph, u, v):
