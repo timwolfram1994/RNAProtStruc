@@ -13,7 +13,7 @@ Additionally we established a pipeline to detect rigid components in Proteins us
 To just run a basic pebblegame you can use the function in generic_pebblegame.py.
 To run a component detection use the functions in pebblegame.py
 
-Functions wrapping the rigid-component-detection and Protein-Graph building and visualization you can find in PDB_to_Grphein.py
+Functions wrapping the rigid-component-detection and Protein-Graph building and visualization you can find in PDB_to_Graphein.py
 
 # A little introduction to the main functions of PDB_to_Graphein.py:
 

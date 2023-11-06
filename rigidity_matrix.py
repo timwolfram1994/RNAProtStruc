@@ -16,10 +16,9 @@ def rigidity_matrix(G):
         row = []
         for node in G.nodes():
             if node in edge: # if node is incident with e
-                for i in (range(0, 3)):
+                for i in (range(0, 2)):
                     row.append(G.nodes[node]['pos'][i] - G.nodes[edge[edge.index(node) - 1]]['pos'][i])
             else:
-                row.append(0)
                 row.append(0)
                 row.append(0)
         R.append(row)
@@ -29,10 +28,10 @@ def rigidity_matrix(G):
 
     print(R)
     print("Rank: ", rank)
-    print(f'deg_free: {3 * num_nodes - num_edges}')
+    print(f'deg_free: {2 * num_nodes - 3}')
     # compares matrix rank with the degrees of freedom
     # if they are equal then the graph is rigid
-    if rank == 3 * num_nodes - num_edges:
+    if rank == 2 * num_nodes - 3:
         print('The Graph is rigid')
         return True
     else:
@@ -45,62 +44,95 @@ def rigidity_matrix(G):
 
 if __name__ == "__main__":
 
-
-
-    # create tetrahedron
-
     G = nx.Graph()
-
     G.add_nodes_from([
-
-        ('A', {"pos": (1, 1, 1)}),
-        ('B', {"pos": (1, -1, -1)}),
-        ('C', {"pos": (-1, 1, -1)}),
-        ('D', {"pos": (-1, -1, 1)}),
-
+        ('A', {"pos": (0, 0)}),
+        ('B', {"pos": (1, 0)}),
+        ('C', {"pos": (0.5, 0.866)})
     ])
-    # Add nodes with specified positions
+    G.add_edges_from([('A', 'B'), ('B', 'C'), ('C', 'A')])
+    print('Triangle')
+    rigidity_matrix(G)
+# square grid
+    G = nx.Graph()
+    G.add_nodes_from([
+        ('A', {"pos": (0, 0)}),
+        ('B', {"pos": (1, 0)}),
+        ('C', {"pos": (1, 1)}),
+        ('D', {"pos": (0, 1)})
+    ])
+    G.add_edges_from([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'A')])
 
-
-    # Define the edges of the tetrahedron
-    edges = [('A', 'B'), ('A', 'C'), ('A', 'D'),
-             ('B', 'C'), ('B', 'D'),
-             ('C', 'D')]
-
-    # Add edges to the graph
-    G.add_edges_from(edges)
-
-    #print(G.nodes['A']['pos'])
-    #print(nx.get_node_attributes(G, "pos"))
-
+    print("Square grid:")
     rigidity_matrix(G)
 
-    ###OCTAHEDRON###
+# pentagon
+    G = nx.Graph()
+    G.add_nodes_from([
+        ('A', {"pos": (0, 0)}),
+        ('B', {"pos": (1, 0)}),
+        ('C', {"pos": (1.5, 0.866)}),
+        ('D', {"pos": (0.5, 1.866)}),
+        ('E', {"pos": (-0.5, 0.866)})
+    ])
+
+    G.add_edges_from([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'E'), ('E', 'A')])
+
+    print("Pentagon:")
+    print(rigidity_matrix(G))
+
+## well constraint pebble game
 
     G = nx.Graph()
 
-    # Add nodes with specified positions
+    # Define the nodes and their 2D positions
     G.add_nodes_from([
-        ('A', {"pos": (0, 0, 1)}),
-        ('B', {"pos": (0, 0, -1)}),
-        ('C', {"pos": (1, 0, 0)}),
-        ('D', {"pos": (-1, 0, 0)}),
-        ('E', {"pos": (0, 1, 0)}),
-        ('F', {"pos": (0, -1, 0)}),
+        ("A", {"pos": (0, 0)}),
+        ("B", {"pos": (1, 0)}),
+        ("C", {"pos": (2, 0)}),
+        ("D", {"pos": (3, 0)}),
+        ("E", {"pos": (4, 0)}),
+        ("F", {"pos": (5, 0)}),
+        ("G", {"pos": (1, 1)}),
+        ("H", {"pos": (2, 1)}),
+        ("I", {"pos": (0.5, 0.866)})
     ])
 
-    # Define the edges of the octahedron
-    edges = [
-        ('A', 'C'), ('A', 'D'), ('A', 'E'),
-        ('B', 'C'), ('B', 'D'), ('B', 'E'),
-        ('C', 'F'), ('D', 'F'), ('A', 'F'),
-        ('C', 'E'), ('B', 'F'), ('C', 'D')
+
+    # Define the edge list
+    edge_list = [
+        ("A", "B"), ("B", "C"), ("C", "D"), ("D", "E"), ("E", "F"), ("F", "A"),
+        ("A", "G"), ("B", "H"), ("C", "H"), ("D", "H"), ("E", "G"), ("F", "G"),
+        ("G", "H"), ("A", "I"), ("B", "I")
+    ]
+
+    G.add_edges_from(edge_list)
+    print("Pebble-game-well-constraint:")
+    print(rigidity_matrix(G))
+
+    #laman graph
+
+    G = nx.Graph()
+
+    # Define the nodes and their 2D positions
+    G.add_nodes_from([
+        ("A", {"pos": (1, 1)}),
+        ("B", {"pos": (3, 1)}),
+        ("C", {"pos": (4, 2)}),
+        ("D", {"pos": (2.5, 3)}),
+        ("E", {"pos": (1.5, 3)}),
+        ("F", {"pos": (0, 2)}),
+        ("G", {"pos": (1.5, 2)}),
+        ("H", {"pos": (2.5, 2)})
+         ])
+
+    # Define the edge list
+    edge_list = [
+    ("A", "B"), ("B", "C"), ("C", "D"), ("D", "E"), ("E", "F"), ("F", "A"),
+    ("A", "G"), ("B", "H"), ("C", "H"), ("D", "H"), ("E", "G"), ("F", "G"), ("G", "H")
     ]
 
     # Add edges to the graph
-    G.add_edges_from(edges)
-
-    print('Test Octahedron:')
-    print(G)
-    rigidity_matrix(G)
-
+    G.add_edges_from(edge_list)
+    print('Sample 7. Laman Graph:')
+    print(rigidity_matrix(G))

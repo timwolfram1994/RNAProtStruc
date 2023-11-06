@@ -3,20 +3,6 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="/2mgo_attributes.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value=":" />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="/2mgo_components.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value=":" />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="/component_csv/Hiv1_components.csv">
           <value>
             <Attribute>
