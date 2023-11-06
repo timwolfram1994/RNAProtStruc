@@ -67,10 +67,7 @@ sample11 = [("A", "B"), ("B", "C"), ("C", "D"), ("A", "C"), ("B", "D"), ("D", "E
             ("G", "H"), ("J", "H"), ("H", "I"), ("I", "J")]
 sample11_graph = nx.from_edgelist(sample11)
 
-'''12. well-constraint-Beispiel (tetrahedron) für 2,3 Pebble Game'''
-
-# Define the vertices of the tetrahedron with explicit positions
-
+'''12. over-constraint-Beispiel (tetrahedron) für 5,6 Pebble Game'''
 sample12_graph = nx.Graph()
 sample12 = [('A', 'B'), ('A', 'C'), ('A', 'D'), ('B', 'C'), ('B', 'D'), ('C', 'D')]
 sample12_graph.add_nodes_from([('A', {"pos": (1, 1, 1)}),
